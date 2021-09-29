@@ -3,4 +3,7 @@
  * @packageDocumentation
  */
 
-export * from "./compile";
+export * from "./ScriptValue";
+export * from "./ScriptHostBridge";
+export * from "./ScriptHostOptions";
+export * from "./ScriptHost";

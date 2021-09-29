@@ -5,9 +5,84 @@
 ```ts
 
 // @public
-export function compile(script: string): CompiledScript;
+export interface EvaluateScriptRequest {
+    // (undocumented)
+    correlationId: string;
+    // (undocumented)
+    pure?: boolean;
+    // (undocumented)
+    script: string;
+    // (undocumented)
+    track?: boolean;
+    // (undocumented)
+    type: "eval";
+}
 
 // @public
-export type CompiledScript = () => unknown;
+export interface EvaluateScriptResponse {
+    // (undocumented)
+    correlationId: string;
+    // (undocumented)
+    error?: string;
+    // (undocumented)
+    result: ScriptValue;
+    // (undocumented)
+    type: "result";
+    // (undocumented)
+    vars?: Record<string, TrackedVariable>;
+}
+
+// @public
+export class ScriptHost {
+    constructor(options?: ScriptHostOptions);
+    // (undocumented)
+    static createDefaultBridge(): ScriptHostBridge;
+    // (undocumented)
+    dispose(): void;
+    // (undocumented)
+    static setupDefaultBridge(factory: ScriptHostBridgeFactory): void;
+}
+
+// @public
+export interface ScriptHostBridge {
+    // (undocumented)
+    dispose(): void;
+    // (undocumented)
+    listen(handler: (message: ScriptHostOutputMessage) => void): () => void;
+    // (undocumented)
+    post(message: ScriptHostInputMessage): void;
+}
+
+// @public
+export type ScriptHostBridgeFactory = () => ScriptHostBridge;
+
+// @public
+export type ScriptHostInputMessage = (EvaluateScriptRequest);
+
+// @public
+export interface ScriptHostOptions {
+    // (undocumented)
+    createBridge?: ScriptHostBridgeFactory;
+}
+
+// @public
+export type ScriptHostOutputMessage = (EvaluateScriptResponse);
+
+// @public
+export interface ScriptObject extends Record<string, ScriptValue> {
+}
+
+// @public
+export type ScriptValue = (boolean | null | undefined | number | BigInt | string | Date | RegExp | Blob | File | FileList | ArrayBuffer | ArrayBufferView | ImageBitmap | ImageData | Array<ScriptValue> | Map<ScriptValue, ScriptValue> | Set<ScriptValue> | ScriptObject);
+
+// @public
+export interface TrackedVariable {
+    // (undocumented)
+    read?: boolean;
+    // (undocumented)
+    version: number;
+    // (undocumented)
+    write?: boolean;
+}
 
 ```

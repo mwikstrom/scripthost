@@ -6,15 +6,29 @@
 
 Sandboxed and observable Javascript host
 
-## Functions
+## Classes
 
-|  Function | Description |
+|  Class | Description |
 |  --- | --- |
-|  [compile(script)](./scripthost.compile.md) | Compiles the specified string as javascript |
+|  [ScriptHost](./scripthost.scripthost.md) | The host in which scripts are evaluated |
+
+## Interfaces
+
+|  Interface | Description |
+|  --- | --- |
+|  [EvaluateScriptRequest](./scripthost.evaluatescriptrequest.md) | The message that is sent to request script evaluation |
+|  [EvaluateScriptResponse](./scripthost.evaluatescriptresponse.md) | The response that is sent back after script evaluation |
+|  [ScriptHostBridge](./scripthost.scripthostbridge.md) | Bridge to the underlying script sandbox |
+|  [ScriptHostOptions](./scripthost.scripthostoptions.md) | Options that can be given to the [ScriptHost](./scripthost.scripthost.md) constructor |
+|  [ScriptObject](./scripthost.scriptobject.md) | A script object |
+|  [TrackedVariable](./scripthost.trackedvariable.md) | A tracked variable |
 
 ## Type Aliases
 
 |  Type Alias | Description |
 |  --- | --- |
-|  [CompiledScript](./scripthost.compiledscript.md) | A compiled script function |
+|  [ScriptHostBridgeFactory](./scripthost.scripthostbridgefactory.md) | Alias for a function that construct [ScriptHostBridge](./scripthost.scripthostbridge.md) instances |
+|  [ScriptHostInputMessage](./scripthost.scripthostinputmessage.md) | Alias for messages that are sent to a [ScriptHostBridge](./scripthost.scripthostbridge.md) |
+|  [ScriptHostOutputMessage](./scripthost.scripthostoutputmessage.md) | Alias for messages that are received from a [ScriptHostBridge](./scripthost.scripthostbridge.md) |
+|  [ScriptValue](./scripthost.scriptvalue.md) | A script value |
 
