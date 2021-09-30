@@ -42,6 +42,11 @@ export interface ScriptHostOptions {
      * The default is twice the value of `pingInterval`.
      */
     unresponsiveInterval?: number;
+
+    /**
+     * Optional, message identifier prefix
+     */
+     messageIdPrefix?: string;
 }
 
 /**

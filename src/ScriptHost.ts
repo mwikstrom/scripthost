@@ -14,6 +14,7 @@ import { ScriptObserveOptions } from "./ScriptObserveOptions";
 import { ScriptSandbox, ScriptSandboxFactory } from "./ScriptSandbox";
 import { ExposedFunctions, ScriptFunctionScope, ScriptHostOptions } from "./ScriptHostOptions";
 import { ScriptValue } from "./ScriptValue";
+import { nanoid } from "nanoid";
 
 /**
  * The host in which scripts are evaluated
@@ -33,6 +34,7 @@ export class ScriptHost {
     #lastPing: number | null = null;
     readonly #writeObservers = new Set<(written: ReadonlyMap<string, number>) => boolean>();
     readonly #responseHandlers = new Map<string, (response: GenericResponse) => void>();
+    readonly #messageIdPrefix: string;
 
     /** Constructs the default script sandbox */
     public static createDefaultSandbox(): ScriptSandbox {
@@ -56,6 +58,7 @@ export class ScriptHost {
             unresponsiveInterval = pingInterval * 2,
             defaultTimeout = 30000,
             initTimeout = defaultTimeout,
+            messageIdPrefix = `host-${nanoid()}-`,
         } = options;
         this.#factory = createSandbox;
         this.#funcs = Object.freeze({ ...expose });
@@ -63,6 +66,7 @@ export class ScriptHost {
         this.#unresponsiveInterval = unresponsiveInterval;
         this.#defaultTimeout = defaultTimeout;
         this.#initTimeout = initTimeout;
+        this.#messageIdPrefix = messageIdPrefix;
     }
 
     /** Determines whether the script host is unresponsive */
@@ -403,7 +407,7 @@ export class ScriptHost {
     }
 
     #nextMessageId(): string {
-        return `host-${++this.#messageIdCounter}`;
+        return `${this.#messageIdPrefix}${++this.#messageIdCounter}`;
     }
 
     #assertNotDisposed(): void {
