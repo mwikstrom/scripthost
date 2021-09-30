@@ -283,14 +283,6 @@ export class ScriptHost {
             this.#bridge.post(pingResponse);
         } else if (isFunctionCallRequest(message)) {
             this.#handleFunctionCall(message);
-        } else if (isGenericMessage(message)) {
-            const errorResponse: ErrorResponse = {
-                type: "error",
-                messageId: this.#nextMessageId(),
-                inResponseTo: message.messageId,
-                message: `Unsupported request: ${message.type}`,
-            };
-            this.#bridge.post(errorResponse);
         } else if (isGenericResponse(message)) {
             const handler = this.#responseHandlers.get(message.inResponseTo);
 
@@ -332,7 +324,15 @@ export class ScriptHost {
                     }
                 }
             }
-        }
+        } else if (isGenericMessage(message)) {
+            const errorResponse: ErrorResponse = {
+                type: "error",
+                messageId: this.#nextMessageId(),
+                inResponseTo: message.messageId,
+                message: `Unsupported request: ${message.type}`,
+            };
+            this.#bridge.post(errorResponse);
+        } 
     }
 
     async #handleFunctionCall(request: FunctionCallRequest): Promise<void> {
