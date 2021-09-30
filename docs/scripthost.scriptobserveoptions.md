@@ -18,5 +18,5 @@ export interface ScriptObserveOptions extends Omit<ScriptEvalOptions, "idempoten
 |  Property | Type | Description |
 |  --- | --- | --- |
 |  [onError?](./scripthost.scriptobserveoptions.onerror.md) | (this: void, error: unknown) =&gt; void | <i>(Optional)</i> |
-|  [onNext](./scripthost.scriptobserveoptions.onnext.md) | (this: void, value: [ScriptValue](./scripthost.scriptvalue.md)<!-- -->) =&gt; void |  |
+|  [onNext](./scripthost.scriptobserveoptions.onnext.md) | (this: void, value: ScriptValue) =&gt; void |  |
 

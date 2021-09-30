@@ -1,19 +1,28 @@
-import { isErrorResponse, ErrorResponse } from "./ErrorResponse";
-import { EvaluateScriptRequest } from "./EvaluateScriptRequest";
-import { isEvaluateScriptResponse } from "./EvaluateScriptResponse";
-import { FunctionCallRequest, isFunctionCallRequest } from "./FunctionCallRequest";
-import { FunctionCallResponse } from "./FunctionCallResponse";
-import { isGenericMessage, GenericMessage } from "./GenericMessage";
-import { isGenericResponse, GenericResponse } from "./GenericResponse";
-import { InitializeRequest } from "./InitializeRequest";
-import { isInitializeResponse, InitializeResponse } from "./InitializeResponse";
-import { isPingRequest, PingRequest } from "./PingRequest";
-import { PingResponse } from "./PingResponse";
 import { ScriptEvalOptions } from "./ScriptEvalOptions";
 import { ScriptObserveOptions } from "./ScriptObserveOptions";
-import { ScriptSandbox, ScriptSandboxFactory } from "./ScriptSandbox";
 import { ExposedFunctions, ScriptFunctionScope, ScriptHostOptions } from "./ScriptHostOptions";
-import { ScriptValue } from "./ScriptValue";
+import { 
+    ErrorResponse, 
+    EvaluateScriptRequest, 
+    FunctionCallRequest, 
+    FunctionCallResponse, 
+    GenericMessage, 
+    GenericResponse, 
+    InitializeRequest, 
+    InitializeResponse, 
+    isErrorResponse, 
+    isEvaluateScriptResponse, 
+    isFunctionCallRequest, 
+    isGenericMessage, 
+    isGenericResponse, 
+    isInitializeResponse, 
+    isPingRequest, 
+    PingRequest, 
+    PingResponse, 
+    ScriptSandbox, 
+    ScriptSandboxFactory, 
+    ScriptValue 
+} from "scripthost-core";
 
 /**
  * The host in which scripts are evaluated

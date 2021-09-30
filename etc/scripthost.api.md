@@ -4,99 +4,13 @@
 
 ```ts
 
-// @public
-export interface ErrorResponse extends GenericResponse<"error"> {
-    // (undocumented)
-    message: string;
-}
-
-// @public
-export interface EvaluateScriptRequest extends GenericMessage<"eval"> {
-    idempotent?: boolean;
-    instanceId?: string;
-    script: string;
-    track?: boolean;
-}
-
-// @public
-export interface EvaluateScriptResponse extends GenericResponse<"result"> {
-    result: ScriptValue;
-    vars?: Map<string, TrackedVariable>;
-}
+import { EvaluateScriptRequest } from 'scripthost-core';
+import { ScriptSandbox } from 'scripthost-core';
+import { ScriptSandboxFactory } from 'scripthost-core';
+import { ScriptValue } from 'scripthost-core';
 
 // @public
 export type ExposedFunctions = Partial<Readonly<Record<string, ScriptFunction>>>;
-
-// @public
-export interface FunctionCallRequest extends GenericMessage<"call"> {
-    args: ScriptValue[];
-    correlationId: string;
-    idempotent: boolean;
-    key: string;
-}
-
-// @public
-export interface FunctionCallResponse extends GenericResponse<"return"> {
-    result: ScriptValue;
-}
-
-// @public
-export interface GenericMessage<T extends string = string> extends Partial<ScriptObject> {
-    messageId: string;
-    type: T;
-}
-
-// @public
-export interface GenericResponse<T extends string = string> extends GenericMessage<T> {
-    inResponseTo: string;
-}
-
-// @public
-export interface InitializeRequest extends GenericMessage<"init"> {
-    funcs: Set<string>;
-}
-
-// @public
-export type InitializeResponse = GenericResponse<"ready">;
-
-// @public
-export function isErrorResponse(thing: unknown): thing is ErrorResponse;
-
-// @public
-export function isEvaluateScriptRequest(thing: unknown): thing is EvaluateScriptRequest;
-
-// @public
-export function isEvaluateScriptResponse(thing: unknown): thing is EvaluateScriptResponse;
-
-// @public
-export function isFunctionCallRequest(thing: unknown): thing is FunctionCallRequest;
-
-// @public
-export function isFunctionCallResponse(thing: unknown): thing is FunctionCallResponse;
-
-// @public
-export function isGenericMessage<T extends string>(thing: unknown, type?: string): thing is GenericMessage<T>;
-
-// @public
-export function isGenericResponse<T extends string>(thing: unknown, type?: string): thing is GenericResponse<T>;
-
-// @public
-export function isInitializeRequest(thing: unknown): thing is InitializeRequest;
-
-// @public
-export function isInitializeResponse(thing: unknown): thing is InitializeResponse;
-
-// @public
-export function isPingRequest(thing: unknown): thing is PingRequest;
-
-// @public
-export function isPingResponse(thing: unknown): thing is PingResponse;
-
-// @public
-export type PingRequest = GenericMessage<"ping">;
-
-// @public
-export type PingResponse = GenericResponse<"pong">;
 
 // @public
 export interface ScriptEvalOptions extends Pick<EvaluateScriptRequest, "idempotent" | "instanceId"> {
@@ -137,34 +51,11 @@ export interface ScriptHostOptions {
 }
 
 // @public
-export interface ScriptObject extends Record<string, ScriptValue> {
-}
-
-// @public
 export interface ScriptObserveOptions extends Omit<ScriptEvalOptions, "idempotent" | "onInvalidated"> {
     // (undocumented)
     onError?: (this: void, error: unknown) => void;
     // (undocumented)
     onNext: (this: void, value: ScriptValue) => void;
-}
-
-// @public
-export interface ScriptSandbox {
-    dispose(): void;
-    listen(handler: (this: void, message: ScriptValue) => void): (this: void) => void;
-    post(message: ScriptValue): void;
-}
-
-// @public
-export type ScriptSandboxFactory = (this: void) => ScriptSandbox;
-
-// @public
-export type ScriptValue = (boolean | null | undefined | number | BigInt | string | Date | RegExp | Blob | File | FileList | ArrayBuffer | ArrayBufferView | ImageBitmap | ImageData | Array<ScriptValue> | Map<ScriptValue, ScriptValue> | Set<ScriptValue> | ScriptObject);
-
-// @public
-export interface TrackedVariable extends Partial<ScriptObject> {
-    read?: number;
-    write?: number;
 }
 
 ```

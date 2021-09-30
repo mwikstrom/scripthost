@@ -11,5 +11,5 @@ A function that can be called from a script
 ```typescript
 export declare type ScriptFunction = (this: ScriptFunctionScope, ...args: ScriptValue[]) => Promise<ScriptValue>;
 ```
-<b>References:</b> [ScriptFunctionScope](./scripthost.scriptfunctionscope.md)<!-- -->, [ScriptValue](./scripthost.scriptvalue.md)
+<b>References:</b> [ScriptFunctionScope](./scripthost.scriptfunctionscope.md)
 

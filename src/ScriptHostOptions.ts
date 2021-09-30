@@ -1,5 +1,4 @@
-import { ScriptValue } from ".";
-import { ScriptSandboxFactory } from "./ScriptSandbox";
+import { ScriptSandboxFactory, ScriptValue } from "scripthost-core";
 
 /**
  * Options that can be given to the {@link ScriptHost} constructor

@@ -1,5 +1,5 @@
+import { ScriptValue } from "scripthost-core";
 import { ScriptEvalOptions } from "./ScriptEvalOptions";
-import { ScriptValue } from "./ScriptValue";
 
 /**
  * Options to the {@link ScriptHost.observe} method

@@ -21,7 +21,7 @@ eval(script: string, options?: ScriptEvalOptions): Promise<ScriptValue>;
 
 <b>Returns:</b>
 
-Promise&lt;[ScriptValue](./scripthost.scriptvalue.md)<!-- -->&gt;
+Promise&lt;ScriptValue&gt;
 
 A promise that resolve to the result of the evaluation
 

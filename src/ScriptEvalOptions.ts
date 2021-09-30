@@ -1,4 +1,4 @@
-import { EvaluateScriptRequest } from "./EvaluateScriptRequest";
+import { EvaluateScriptRequest } from "scripthost-core";
 
 /**
  * Options to the {@link ScriptHost.eval} method

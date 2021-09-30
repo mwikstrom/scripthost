@@ -16,7 +16,7 @@ static setupDefaultSandbox(factory: ScriptSandboxFactory): void;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  factory | [ScriptSandboxFactory](./scripthost.scriptsandboxfactory.md) |  |
+|  factory | ScriptSandboxFactory |  |
 
 <b>Returns:</b>
 

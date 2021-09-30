@@ -16,7 +16,7 @@ export interface ScriptHostOptions
 
 |  Property | Type | Description |
 |  --- | --- | --- |
-|  [createSandbox?](./scripthost.scripthostoptions.createsandbox.md) | [ScriptSandboxFactory](./scripthost.scriptsandboxfactory.md) | <i>(Optional)</i> Optionally specifices the sandbox factory |
+|  [createSandbox?](./scripthost.scripthostoptions.createsandbox.md) | ScriptSandboxFactory | <i>(Optional)</i> Optionally specifices the sandbox factory |
 |  [defaultTimeout?](./scripthost.scripthostoptions.defaulttimeout.md) | number | <i>(Optional)</i> The default interval, in milliseconds, that is allowed to elapse after sending a request before the request is considered to have timed out. |
 |  [expose?](./scripthost.scripthostoptions.expose.md) | [ExposedFunctions](./scripthost.exposedfunctions.md) | <i>(Optional)</i> Optionally specifies functions that shall be exposed to scripts |
 |  [initTimeout?](./scripthost.scripthostoptions.inittimeout.md) | number | <i>(Optional)</i> The interval, in milliseconds, that is allowed to elapse when the sandbox is initialized. |

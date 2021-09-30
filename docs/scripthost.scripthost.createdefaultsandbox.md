@@ -13,5 +13,5 @@ static createDefaultSandbox(): ScriptSandbox;
 ```
 <b>Returns:</b>
 
-[ScriptSandbox](./scripthost.scriptsandbox.md)
+ScriptSandbox
 
