@@ -4,6 +4,8 @@
 
 ## ScriptHost.dispose() method
 
+Disposes the script host
+
 <b>Signature:</b>
 
 ```typescript

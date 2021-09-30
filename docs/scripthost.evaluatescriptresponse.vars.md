@@ -4,8 +4,10 @@
 
 ## EvaluateScriptResponse.vars property
 
+Optionally includes the global variables that were accessed during script evaluation
+
 <b>Signature:</b>
 
 ```typescript
-vars?: Record<string, TrackedVariable>;
+vars?: Map<string, TrackedVariable>;
 ```

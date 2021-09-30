@@ -4,7 +4,7 @@
 
 ## ScriptHostBridge interface
 
-Bridge to the underlying script sandbox
+Bridge to an underlying script sandbox
 
 <b>Signature:</b>
 
@@ -16,7 +16,7 @@ export interface ScriptHostBridge
 
 |  Method | Description |
 |  --- | --- |
-|  [dispose()](./scripthost.scripthostbridge.dispose.md) |  |
-|  [listen(handler)](./scripthost.scripthostbridge.listen.md) |  |
-|  [post(message)](./scripthost.scripthostbridge.post.md) |  |
+|  [dispose()](./scripthost.scripthostbridge.dispose.md) | Disposes the underlying sandbox |
+|  [listen(handler)](./scripthost.scripthostbridge.listen.md) | Listens to messages from the underlying sandbox |
+|  [post(message)](./scripthost.scripthostbridge.post.md) | Sends a message to the underlying sandbox |
 

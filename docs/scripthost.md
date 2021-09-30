@@ -12,23 +12,51 @@ Sandboxed and observable Javascript host
 |  --- | --- |
 |  [ScriptHost](./scripthost.scripthost.md) | The host in which scripts are evaluated |
 
+## Functions
+
+|  Function | Description |
+|  --- | --- |
+|  [isErrorResponse(thing)](./scripthost.iserrorresponse.md) | Determines whether something is an [ErrorResponse](./scripthost.errorresponse.md) |
+|  [isEvaluateScriptRequest(thing)](./scripthost.isevaluatescriptrequest.md) | Determines whether something is a [EvaluateScriptRequest](./scripthost.evaluatescriptrequest.md) |
+|  [isEvaluateScriptResponse(thing)](./scripthost.isevaluatescriptresponse.md) | Determines whether something is a [EvaluateScriptResponse](./scripthost.evaluatescriptresponse.md) |
+|  [isFunctionCallRequest(thing)](./scripthost.isfunctioncallrequest.md) | Determines whether something is a [FunctionCallRequest](./scripthost.functioncallrequest.md) |
+|  [isFunctionCallResponse(thing)](./scripthost.isfunctioncallresponse.md) | Determines whether something is a [FunctionCallResponse](./scripthost.functioncallresponse.md) |
+|  [isGenericMessage(thing, type)](./scripthost.isgenericmessage.md) | Determines whether something is a [GenericMessage](./scripthost.genericmessage.md) |
+|  [isGenericResponse(thing, type)](./scripthost.isgenericresponse.md) | Determines whether something is a [GenericResponse](./scripthost.genericresponse.md) |
+|  [isInitializeRequest(thing)](./scripthost.isinitializerequest.md) | Determines whether something is a [InitializeRequest](./scripthost.initializerequest.md) |
+|  [isInitializeResponse(thing)](./scripthost.isinitializeresponse.md) | Determines whether something is a [InitializeResponse](./scripthost.initializeresponse.md) |
+|  [isPingRequest(thing)](./scripthost.ispingrequest.md) | Determines whether something is a [PingRequest](./scripthost.pingrequest.md) |
+|  [isPingResponse(thing)](./scripthost.ispingresponse.md) | Determines whether something is a [PingResponse](./scripthost.pingresponse.md) |
+
 ## Interfaces
 
 |  Interface | Description |
 |  --- | --- |
+|  [ErrorResponse](./scripthost.errorresponse.md) | The response that is sent when an error occurred |
 |  [EvaluateScriptRequest](./scripthost.evaluatescriptrequest.md) | The message that is sent to request script evaluation |
-|  [EvaluateScriptResponse](./scripthost.evaluatescriptresponse.md) | The response that is sent back after script evaluation |
-|  [ScriptHostBridge](./scripthost.scripthostbridge.md) | Bridge to the underlying script sandbox |
+|  [EvaluateScriptResponse](./scripthost.evaluatescriptresponse.md) | The response that is sent back after successful script evaluation |
+|  [FunctionCallRequest](./scripthost.functioncallrequest.md) | The message that is sent from the underlying sandbox to invoke a function exposed by the script host. |
+|  [FunctionCallResponse](./scripthost.functioncallresponse.md) | The response that is sent back to the bridge after a successful function call |
+|  [GenericMessage](./scripthost.genericmessage.md) | Generic message |
+|  [GenericResponse](./scripthost.genericresponse.md) | Generic response |
+|  [InitializeRequest](./scripthost.initializerequest.md) | The message that is sent to initialize the underlying sandbox |
+|  [InitializeResponse](./scripthost.initializeresponse.md) | The message that is sent when the underlying sandbox is ready |
+|  [ScriptEvalOptions](./scripthost.scriptevaloptions.md) | Options to the [ScriptHost.eval()](./scripthost.scripthost.eval.md) method |
+|  [ScriptFunctionScope](./scripthost.scriptfunctionscope.md) | The scope in which a script function is called |
+|  [ScriptHostBridge](./scripthost.scripthostbridge.md) | Bridge to an underlying script sandbox |
 |  [ScriptHostOptions](./scripthost.scripthostoptions.md) | Options that can be given to the [ScriptHost](./scripthost.scripthost.md) constructor |
 |  [ScriptObject](./scripthost.scriptobject.md) | A script object |
+|  [ScriptObserveOptions](./scripthost.scriptobserveoptions.md) | Options to the [ScriptHost.observe()](./scripthost.scripthost.observe.md) method |
 |  [TrackedVariable](./scripthost.trackedvariable.md) | A tracked variable |
 
 ## Type Aliases
 
 |  Type Alias | Description |
 |  --- | --- |
+|  [ExposedFunctions](./scripthost.exposedfunctions.md) | Functions exposed to scripts |
+|  [PingRequest](./scripthost.pingrequest.md) | The message that is sent to ping the other end of a bridge |
+|  [PingResponse](./scripthost.pingresponse.md) | The message that is sent to in response to a ping |
+|  [ScriptFunction](./scripthost.scriptfunction.md) | A function that can be called from a script |
 |  [ScriptHostBridgeFactory](./scripthost.scripthostbridgefactory.md) | Alias for a function that construct [ScriptHostBridge](./scripthost.scripthostbridge.md) instances |
-|  [ScriptHostInputMessage](./scripthost.scripthostinputmessage.md) | Alias for messages that are sent to a [ScriptHostBridge](./scripthost.scripthostbridge.md) |
-|  [ScriptHostOutputMessage](./scripthost.scripthostoutputmessage.md) | Alias for messages that are received from a [ScriptHostBridge](./scripthost.scripthostbridge.md) |
 |  [ScriptValue](./scripthost.scriptvalue.md) | A script value |
 

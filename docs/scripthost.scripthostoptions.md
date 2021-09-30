@@ -16,5 +16,10 @@ export interface ScriptHostOptions
 
 |  Property | Type | Description |
 |  --- | --- | --- |
-|  [createBridge?](./scripthost.scripthostoptions.createbridge.md) | [ScriptHostBridgeFactory](./scripthost.scripthostbridgefactory.md) | <i>(Optional)</i> |
+|  [createBridge?](./scripthost.scripthostoptions.createbridge.md) | [ScriptHostBridgeFactory](./scripthost.scripthostbridgefactory.md) | <i>(Optional)</i> Optionally specifices the bridge constructor |
+|  [defaultTimeout?](./scripthost.scripthostoptions.defaulttimeout.md) | number | <i>(Optional)</i> The default interval, in milliseconds, that is allowed to elapse after sending a request before the request is considered to have timed out. |
+|  [expose?](./scripthost.scripthostoptions.expose.md) | [ExposedFunctions](./scripthost.exposedfunctions.md) | <i>(Optional)</i> Optionally specifies functions that shall be exposed to scripts |
+|  [initTimeout?](./scripthost.scripthostoptions.inittimeout.md) | number | <i>(Optional)</i> The interval, in milliseconds, that is allowed to elapse when the sandbox is initialized. |
+|  [pingInterval?](./scripthost.scripthostoptions.pinginterval.md) | number | <i>(Optional)</i> Optionally specifies the interval, in milliseconds, that the host shall ping the underlying sandbox to determine whether it is unresponsive |
+|  [unresponsiveInterval?](./scripthost.scripthostoptions.unresponsiveinterval.md) | number | <i>(Optional)</i> Optionally specifies the interval, in milliseconds, that must elapse since the last message was received from the underlying sandbox to consider is unresponsive |
 

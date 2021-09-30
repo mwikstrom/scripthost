@@ -4,6 +4,8 @@
 
 ## ScriptHostOptions.createBridge property
 
+Optionally specifices the bridge constructor
+
 <b>Signature:</b>
 
 ```typescript

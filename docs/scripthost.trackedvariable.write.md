@@ -4,8 +4,10 @@
 
 ## TrackedVariable.write property
 
+The version of the global scope after the variable was last written
+
 <b>Signature:</b>
 
 ```typescript
-write?: boolean;
+write?: number;
 ```

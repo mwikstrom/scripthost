@@ -4,6 +4,8 @@
 
 ## ScriptHost.createDefaultBridge() method
 
+Constructs the default script host sandbox bridge
+
 <b>Signature:</b>
 
 ```typescript

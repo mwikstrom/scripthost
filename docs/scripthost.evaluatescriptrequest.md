@@ -9,16 +9,16 @@ The message that is sent to request script evaluation
 <b>Signature:</b>
 
 ```typescript
-export interface EvaluateScriptRequest 
+export interface EvaluateScriptRequest extends GenericMessage<"eval"> 
 ```
+<b>Extends:</b> [GenericMessage](./scripthost.genericmessage.md)<!-- -->&lt;"eval"&gt;
 
 ## Properties
 
 |  Property | Type | Description |
 |  --- | --- | --- |
-|  [correlationId](./scripthost.evaluatescriptrequest.correlationid.md) | string |  |
-|  [pure?](./scripthost.evaluatescriptrequest.pure.md) | boolean | <i>(Optional)</i> |
-|  [script](./scripthost.evaluatescriptrequest.script.md) | string |  |
-|  [track?](./scripthost.evaluatescriptrequest.track.md) | boolean | <i>(Optional)</i> |
-|  [type](./scripthost.evaluatescriptrequest.type.md) | "eval" |  |
+|  [idempotent?](./scripthost.evaluatescriptrequest.idempotent.md) | boolean | <i>(Optional)</i> Optionally specifies that the script is idempotent, i.e. is not allowed to have side-effects. |
+|  [instanceId?](./scripthost.evaluatescriptrequest.instanceid.md) | string | <i>(Optional)</i> Optionally identifies the instance in which the script shall be evaluated |
+|  [script](./scripthost.evaluatescriptrequest.script.md) | string | The script that shall be evaluated |
+|  [track?](./scripthost.evaluatescriptrequest.track.md) | boolean | <i>(Optional)</i> Optionally specifies that variables that are accessed during script evaluation shall be tracked. |
 

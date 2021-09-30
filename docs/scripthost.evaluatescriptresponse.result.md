@@ -4,6 +4,8 @@
 
 ## EvaluateScriptResponse.result property
 
+The result value
+
 <b>Signature:</b>
 
 ```typescript

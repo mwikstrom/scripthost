@@ -9,7 +9,7 @@ Alias for a function that construct [ScriptHostBridge](./scripthost.scripthostbr
 <b>Signature:</b>
 
 ```typescript
-export declare type ScriptHostBridgeFactory = () => ScriptHostBridge;
+export declare type ScriptHostBridgeFactory = (this: void) => ScriptHostBridge;
 ```
 <b>References:</b> [ScriptHostBridge](./scripthost.scripthostbridge.md)
 

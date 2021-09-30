@@ -1,67 +1,29 @@
 import { ScriptValue } from "./ScriptValue";
 
 /**
- * Bridge to the underlying script sandbox
+ * Bridge to an underlying script sandbox
  * @public
  */
 export interface ScriptHostBridge {
+    /** Disposes the underlying sandbox */
     dispose(): void;
-    post(message: ScriptHostInputMessage): void;
-    listen(handler: (message: ScriptHostOutputMessage) => void): () => void;
+
+    /**
+     * Sends a message to the underlying sandbox
+     * @param message - The message to be sent
+     */
+    post(message: ScriptValue): void;
+
+    /**
+     * Listens to messages from the underlying sandbox
+     * @param handler - The callback to be invoked whenever a message is received
+     * @returns A callback that shall be called to stop receiving messages
+     */
+    listen(handler: (this: void, message: ScriptValue) => void): (this: void) => void;
 }
 
 /**
  * Alias for a function that construct {@link ScriptHostBridge} instances
  * @public
  */
-export type ScriptHostBridgeFactory = () => ScriptHostBridge;
-
-/**
- * Alias for messages that are sent to a {@link ScriptHostBridge}
- * @public
- */
-export type ScriptHostInputMessage = (
-    EvaluateScriptRequest
-);
-
-/**
- * Alias for messages that are received from a {@link ScriptHostBridge}
- * @public
- */
-export type ScriptHostOutputMessage = (
-    EvaluateScriptResponse
-);
-
-/**
- * The message that is sent to request script evaluation
- * @public
- */
-export interface EvaluateScriptRequest {
-    type: "eval";
-    correlationId: string;
-    script: string;
-    pure?: boolean;
-    track?: boolean;
-}
-
-/**
- * The response that is sent back after script evaluation
- * @public
- */
-export interface EvaluateScriptResponse {
-    type: "result";
-    correlationId: string;
-    result: ScriptValue;
-    error?: string;
-    vars?: Record<string, TrackedVariable>;
-}
-
-/**
- * A tracked variable
- * @public
- */
-export interface TrackedVariable {
-    version: number;
-    read?: boolean;
-    write?: boolean;
-}
+export type ScriptHostBridgeFactory = (this: void) => ScriptHostBridge;

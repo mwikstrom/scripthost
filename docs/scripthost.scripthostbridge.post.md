@@ -4,17 +4,19 @@
 
 ## ScriptHostBridge.post() method
 
+Sends a message to the underlying sandbox
+
 <b>Signature:</b>
 
 ```typescript
-post(message: ScriptHostInputMessage): void;
+post(message: ScriptValue): void;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  message | [ScriptHostInputMessage](./scripthost.scripthostinputmessage.md) |  |
+|  message | [ScriptValue](./scripthost.scriptvalue.md) | The message to be sent |
 
 <b>Returns:</b>
 

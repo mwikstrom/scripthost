@@ -9,14 +9,14 @@ A tracked variable
 <b>Signature:</b>
 
 ```typescript
-export interface TrackedVariable 
+export interface TrackedVariable extends Partial<ScriptObject> 
 ```
+<b>Extends:</b> Partial&lt;[ScriptObject](./scripthost.scriptobject.md)<!-- -->&gt;
 
 ## Properties
 
 |  Property | Type | Description |
 |  --- | --- | --- |
-|  [read?](./scripthost.trackedvariable.read.md) | boolean | <i>(Optional)</i> |
-|  [version](./scripthost.trackedvariable.version.md) | number |  |
-|  [write?](./scripthost.trackedvariable.write.md) | boolean | <i>(Optional)</i> |
+|  [read?](./scripthost.trackedvariable.read.md) | number | <i>(Optional)</i> The version of the global scope when the variable was first read |
+|  [write?](./scripthost.trackedvariable.write.md) | number | <i>(Optional)</i> The version of the global scope after the variable was last written |
 

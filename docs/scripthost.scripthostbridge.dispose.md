@@ -4,6 +4,8 @@
 
 ## ScriptHostBridge.dispose() method
 
+Disposes the underlying sandbox
+
 <b>Signature:</b>
 
 ```typescript

@@ -1,7 +1,8 @@
 import { ScriptHost } from "../src";
 
 describe("ScriptHost", () => {
-    it("cannot create without bridge factory", async () => {
-        expect(() => new ScriptHost()).toThrow("There is no default script host bridge factory");
+    it("cannot init without bridge factory", async () => {
+        const host = new ScriptHost();
+        await expect(async () => await host.init()).rejects.toThrow("There is no default script host bridge factory");
     });
 });

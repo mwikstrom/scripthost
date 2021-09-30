@@ -5,84 +5,167 @@
 ```ts
 
 // @public
-export interface EvaluateScriptRequest {
+export interface ErrorResponse extends GenericResponse<"error"> {
     // (undocumented)
-    correlationId: string;
-    // (undocumented)
-    pure?: boolean;
-    // (undocumented)
-    script: string;
-    // (undocumented)
-    track?: boolean;
-    // (undocumented)
-    type: "eval";
+    message: string;
 }
 
 // @public
-export interface EvaluateScriptResponse {
-    // (undocumented)
-    correlationId: string;
-    // (undocumented)
-    error?: string;
-    // (undocumented)
+export interface EvaluateScriptRequest extends GenericMessage<"eval"> {
+    idempotent?: boolean;
+    instanceId?: string;
+    script: string;
+    track?: boolean;
+}
+
+// @public
+export interface EvaluateScriptResponse extends GenericResponse<"result"> {
     result: ScriptValue;
-    // (undocumented)
-    type: "result";
-    // (undocumented)
-    vars?: Record<string, TrackedVariable>;
+    vars?: Map<string, TrackedVariable>;
+}
+
+// @public
+export type ExposedFunctions = Partial<Readonly<Record<string, ScriptFunction>>>;
+
+// @public
+export interface FunctionCallRequest extends GenericMessage<"call"> {
+    args: ScriptValue[];
+    correlationId: string;
+    idempotent: boolean;
+    key: string;
+}
+
+// @public
+export interface FunctionCallResponse extends GenericResponse<"return"> {
+    result: ScriptValue;
+}
+
+// @public
+export interface GenericMessage<T extends string = string> extends Partial<ScriptObject> {
+    messageId: string;
+    type: T;
+}
+
+// @public
+export interface GenericResponse<T extends string = string> extends GenericMessage<T> {
+    inResponseTo: string;
+}
+
+// @public
+export interface InitializeRequest extends GenericMessage<"init"> {
+    funcs: Set<string>;
+}
+
+// @public
+export interface InitializeResponse extends GenericResponse<"ready"> {
+    funcs: Set<string>;
+}
+
+// @public
+export function isErrorResponse(thing: unknown): thing is ErrorResponse;
+
+// @public
+export function isEvaluateScriptRequest(thing: unknown): thing is EvaluateScriptRequest;
+
+// @public
+export function isEvaluateScriptResponse(thing: unknown): thing is EvaluateScriptResponse;
+
+// @public
+export function isFunctionCallRequest(thing: unknown): thing is FunctionCallRequest;
+
+// @public
+export function isFunctionCallResponse(thing: unknown): thing is FunctionCallResponse;
+
+// @public
+export function isGenericMessage<T extends string>(thing: unknown, type?: string): thing is GenericMessage<T>;
+
+// @public
+export function isGenericResponse<T extends string>(thing: unknown, type?: string): thing is GenericResponse<T>;
+
+// @public
+export function isInitializeRequest(thing: unknown): thing is InitializeRequest;
+
+// @public
+export function isInitializeResponse(thing: unknown): thing is InitializeResponse;
+
+// @public
+export function isPingRequest(thing: unknown): thing is PingRequest;
+
+// @public
+export function isPingResponse(thing: unknown): thing is PingResponse;
+
+// @public
+export type PingRequest = GenericMessage<"ping">;
+
+// @public
+export type PingResponse = GenericResponse<"pong">;
+
+// @public
+export interface ScriptEvalOptions extends Pick<EvaluateScriptRequest, "idempotent" | "instanceId"> {
+    onInvalidated?: (this: void) => void;
+    timeout?: number;
+}
+
+// @public
+export type ScriptFunction = (this: ScriptFunctionScope, ...args: ScriptValue[]) => Promise<ScriptValue>;
+
+// @public
+export interface ScriptFunctionScope {
+    readonly idemponent: boolean;
 }
 
 // @public
 export class ScriptHost {
     constructor(options?: ScriptHostOptions);
-    // (undocumented)
     static createDefaultBridge(): ScriptHostBridge;
-    // (undocumented)
     dispose(): void;
-    // (undocumented)
+    eval(script: string, options?: ScriptEvalOptions): Promise<ScriptValue>;
+    init(): Promise<void>;
+    get isUnresponsive(): boolean;
+    observe(script: string, options: ScriptObserveOptions): (this: void) => void;
+    reset(): void;
     static setupDefaultBridge(factory: ScriptHostBridgeFactory): void;
 }
 
 // @public
 export interface ScriptHostBridge {
-    // (undocumented)
     dispose(): void;
-    // (undocumented)
-    listen(handler: (message: ScriptHostOutputMessage) => void): () => void;
-    // (undocumented)
-    post(message: ScriptHostInputMessage): void;
+    listen(handler: (this: void, message: ScriptValue) => void): (this: void) => void;
+    post(message: ScriptValue): void;
 }
 
 // @public
-export type ScriptHostBridgeFactory = () => ScriptHostBridge;
-
-// @public
-export type ScriptHostInputMessage = (EvaluateScriptRequest);
+export type ScriptHostBridgeFactory = (this: void) => ScriptHostBridge;
 
 // @public
 export interface ScriptHostOptions {
-    // (undocumented)
     createBridge?: ScriptHostBridgeFactory;
+    defaultTimeout?: number;
+    expose?: ExposedFunctions;
+    initTimeout?: number;
+    pingInterval?: number;
+    unresponsiveInterval?: number;
 }
-
-// @public
-export type ScriptHostOutputMessage = (EvaluateScriptResponse);
 
 // @public
 export interface ScriptObject extends Record<string, ScriptValue> {
 }
 
 // @public
+export interface ScriptObserveOptions extends Omit<ScriptEvalOptions, "idempotent" | "onInvalidated"> {
+    // (undocumented)
+    onError?: (this: void, error: unknown) => void;
+    // (undocumented)
+    onNext: (this: void, value: ScriptValue) => void;
+}
+
+// @public
 export type ScriptValue = (boolean | null | undefined | number | BigInt | string | Date | RegExp | Blob | File | FileList | ArrayBuffer | ArrayBufferView | ImageBitmap | ImageData | Array<ScriptValue> | Map<ScriptValue, ScriptValue> | Set<ScriptValue> | ScriptObject);
 
 // @public
-export interface TrackedVariable {
-    // (undocumented)
-    read?: boolean;
-    // (undocumented)
-    version: number;
-    // (undocumented)
-    write?: boolean;
+export interface TrackedVariable extends Partial<ScriptObject> {
+    read?: number;
+    write?: number;
 }
 
 ```

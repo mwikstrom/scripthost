@@ -4,6 +4,8 @@
 
 ## EvaluateScriptRequest.track property
 
+Optionally specifies that variables that are accessed during script evaluation shall be tracked.
+
 <b>Signature:</b>
 
 ```typescript

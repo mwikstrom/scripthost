@@ -4,6 +4,8 @@
 
 ## EvaluateScriptRequest.script property
 
+The script that shall be evaluated
+
 <b>Signature:</b>
 
 ```typescript

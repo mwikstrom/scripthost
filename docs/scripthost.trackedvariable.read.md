@@ -4,8 +4,10 @@
 
 ## TrackedVariable.read property
 
+The version of the global scope when the variable was first read
+
 <b>Signature:</b>
 
 ```typescript
-read?: boolean;
+read?: number;
 ```

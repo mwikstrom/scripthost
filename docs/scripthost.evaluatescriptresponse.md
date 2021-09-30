@@ -4,21 +4,19 @@
 
 ## EvaluateScriptResponse interface
 
-The response that is sent back after script evaluation
+The response that is sent back after successful script evaluation
 
 <b>Signature:</b>
 
 ```typescript
-export interface EvaluateScriptResponse 
+export interface EvaluateScriptResponse extends GenericResponse<"result"> 
 ```
+<b>Extends:</b> [GenericResponse](./scripthost.genericresponse.md)<!-- -->&lt;"result"&gt;
 
 ## Properties
 
 |  Property | Type | Description |
 |  --- | --- | --- |
-|  [correlationId](./scripthost.evaluatescriptresponse.correlationid.md) | string |  |
-|  [error?](./scripthost.evaluatescriptresponse.error.md) | string | <i>(Optional)</i> |
-|  [result](./scripthost.evaluatescriptresponse.result.md) | [ScriptValue](./scripthost.scriptvalue.md) |  |
-|  [type](./scripthost.evaluatescriptresponse.type.md) | "result" |  |
-|  [vars?](./scripthost.evaluatescriptresponse.vars.md) | Record&lt;string, [TrackedVariable](./scripthost.trackedvariable.md)<!-- -->&gt; | <i>(Optional)</i> |
+|  [result](./scripthost.evaluatescriptresponse.result.md) | [ScriptValue](./scripthost.scriptvalue.md) | The result value |
+|  [vars?](./scripthost.evaluatescriptresponse.vars.md) | Map&lt;string, [TrackedVariable](./scripthost.trackedvariable.md)<!-- -->&gt; | <i>(Optional)</i> Optionally includes the global variables that were accessed during script evaluation |
 

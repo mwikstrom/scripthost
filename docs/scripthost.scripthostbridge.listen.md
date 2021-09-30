@@ -4,19 +4,23 @@
 
 ## ScriptHostBridge.listen() method
 
+Listens to messages from the underlying sandbox
+
 <b>Signature:</b>
 
 ```typescript
-listen(handler: (message: ScriptHostOutputMessage) => void): () => void;
+listen(handler: (this: void, message: ScriptValue) => void): (this: void) => void;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  handler | (message: [ScriptHostOutputMessage](./scripthost.scripthostoutputmessage.md)<!-- -->) =&gt; void |  |
+|  handler | (this: void, message: [ScriptValue](./scripthost.scriptvalue.md)<!-- -->) =&gt; void | The callback to be invoked whenever a message is received |
 
 <b>Returns:</b>
 
-() =&gt; void
+(this: void) =&gt; void
+
+A callback that shall be called to stop receiving messages
 
