@@ -14,7 +14,6 @@ import { ScriptObserveOptions } from "./ScriptObserveOptions";
 import { ScriptSandbox, ScriptSandboxFactory } from "./ScriptSandbox";
 import { ExposedFunctions, ScriptFunctionScope, ScriptHostOptions } from "./ScriptHostOptions";
 import { ScriptValue } from "./ScriptValue";
-import { nanoid } from "nanoid";
 
 /**
  * The host in which scripts are evaluated
@@ -58,7 +57,7 @@ export class ScriptHost {
             unresponsiveInterval = pingInterval * 2,
             defaultTimeout = 30000,
             initTimeout = defaultTimeout,
-            messageIdPrefix = `host-${nanoid()}-`,
+            messageIdPrefix = `host-${(Math.random() * 999999).toFixed(0).padStart(6, "0")}-`,
         } = options;
         this.#factory = createSandbox;
         this.#funcs = Object.freeze({ ...expose });
