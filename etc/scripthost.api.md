@@ -57,9 +57,7 @@ export interface InitializeRequest extends GenericMessage<"init"> {
 }
 
 // @public
-export interface InitializeResponse extends GenericResponse<"ready"> {
-    funcs: Set<string>;
-}
+export type InitializeResponse = GenericResponse<"ready">;
 
 // @public
 export function isErrorResponse(thing: unknown): thing is ErrorResponse;

@@ -40,7 +40,6 @@ Sandboxed and observable Javascript host
 |  [GenericMessage](./scripthost.genericmessage.md) | Generic message |
 |  [GenericResponse](./scripthost.genericresponse.md) | Generic response |
 |  [InitializeRequest](./scripthost.initializerequest.md) | The message that is sent to initialize the underlying sandbox |
-|  [InitializeResponse](./scripthost.initializeresponse.md) | The message that is sent when the underlying sandbox is ready |
 |  [ScriptEvalOptions](./scripthost.scriptevaloptions.md) | Options to the [ScriptHost.eval()](./scripthost.scripthost.eval.md) method |
 |  [ScriptFunctionScope](./scripthost.scriptfunctionscope.md) | The scope in which a script function is called |
 |  [ScriptHostOptions](./scripthost.scripthostoptions.md) | Options that can be given to the [ScriptHost](./scripthost.scripthost.md) constructor |
@@ -54,6 +53,7 @@ Sandboxed and observable Javascript host
 |  Type Alias | Description |
 |  --- | --- |
 |  [ExposedFunctions](./scripthost.exposedfunctions.md) | Functions exposed to scripts |
+|  [InitializeResponse](./scripthost.initializeresponse.md) | The message that is sent when the underlying sandbox is ready |
 |  [PingRequest](./scripthost.pingrequest.md) | The message that is sent to ping the other end of a messsage pipe |
 |  [PingResponse](./scripthost.pingresponse.md) | The message that is sent to in response to a ping |
 |  [ScriptFunction](./scripthost.scriptfunction.md) | A function that can be called from a script |

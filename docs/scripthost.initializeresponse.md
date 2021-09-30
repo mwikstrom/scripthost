@@ -2,20 +2,14 @@
 
 [Home](./index.md) &gt; [scripthost](./scripthost.md) &gt; [InitializeResponse](./scripthost.initializeresponse.md)
 
-## InitializeResponse interface
+## InitializeResponse type
 
 The message that is sent when the underlying sandbox is ready
 
 <b>Signature:</b>
 
 ```typescript
-export interface InitializeResponse extends GenericResponse<"ready"> 
+export declare type InitializeResponse = GenericResponse<"ready">;
 ```
-<b>Extends:</b> [GenericResponse](./scripthost.genericresponse.md)<!-- -->&lt;"ready"&gt;
-
-## Properties
-
-|  Property | Type | Description |
-|  --- | --- | --- |
-|  [funcs](./scripthost.initializeresponse.funcs.md) | Set&lt;string&gt; | Keys of exposed functions |
+<b>References:</b> [GenericResponse](./scripthost.genericresponse.md)
 
