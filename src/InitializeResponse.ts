@@ -4,10 +4,7 @@ import { GenericResponse, isGenericResponse } from "./GenericResponse";
  * The message that is sent when the underlying sandbox is ready
  * @public
  */
-export interface InitializeResponse extends GenericResponse<"ready"> {
-    /** Keys of exposed functions */
-    funcs: Set<string>;
-}
+export type InitializeResponse = GenericResponse<"ready">;
 
 /**
  * Determines whether something is a {@link InitializeResponse}
