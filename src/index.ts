@@ -4,7 +4,7 @@
  */
 
 export * from "./ScriptValue";
-export * from "./ScriptHostBridge";
+export * from "./ScriptSandbox";
 export * from "./GenericMessage";
 export * from "./GenericResponse";
 export * from "./InitializeRequest";

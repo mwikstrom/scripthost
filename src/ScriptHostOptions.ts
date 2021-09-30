@@ -1,13 +1,13 @@
 import { ScriptValue } from ".";
-import { ScriptHostBridgeFactory } from "./ScriptHostBridge";
+import { ScriptSandboxFactory } from "./ScriptSandbox";
 
 /**
  * Options that can be given to the {@link ScriptHost} constructor
  * @public
  */
 export interface ScriptHostOptions {
-    /** Optionally specifices the bridge constructor */
-    createBridge?: ScriptHostBridgeFactory;
+    /** Optionally specifices the sandbox factory */
+    createSandbox?: ScriptSandboxFactory;
 
     /** Optionally specifies functions that shall be exposed to scripts */
     expose?: ExposedFunctions;

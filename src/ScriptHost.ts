@@ -11,7 +11,7 @@ import { isPingRequest, PingRequest } from "./PingRequest";
 import { PingResponse } from "./PingResponse";
 import { ScriptEvalOptions } from "./ScriptEvalOptions";
 import { ScriptObserveOptions } from "./ScriptObserveOptions";
-import { ScriptHostBridge, ScriptHostBridgeFactory } from "./ScriptHostBridge";
+import { ScriptSandbox, ScriptSandboxFactory } from "./ScriptSandbox";
 import { ExposedFunctions, ScriptFunctionScope, ScriptHostOptions } from "./ScriptHostOptions";
 import { ScriptValue } from "./ScriptValue";
 
@@ -20,13 +20,13 @@ import { ScriptValue } from "./ScriptValue";
  * @public
  */
 export class ScriptHost {
-    #factory: ScriptHostBridgeFactory | null;
+    #factory: ScriptSandboxFactory | null;
     #funcs: ExposedFunctions;
     readonly #pingInterval: number;
     readonly #unresponsiveInterval: number;
     readonly #defaultTimeout: number;
     readonly #initTimeout: number;
-    #bridge: ScriptHostBridge | null = null;
+    #sandbox: ScriptSandbox | null = null;
     #init: Promise<InitializeResponse> | null = null;
     #messageIdCounter = 0;
     #pingIntervalId: ReturnType<typeof setInterval> | null = null;
@@ -34,30 +34,30 @@ export class ScriptHost {
     readonly #writeObservers = new Set<(written: ReadonlyMap<string, number>) => boolean>();
     readonly #responseHandlers = new Map<string, (response: GenericResponse) => void>();
 
-    /** Constructs the default script host sandbox bridge */
-    public static createDefaultBridge(): ScriptHostBridge {
-        if (!DEFAULT_BRIDGE_FACTORY) {
-            throw new Error("There is no default script host bridge factory");
+    /** Constructs the default script sandbox */
+    public static createDefaultSandbox(): ScriptSandbox {
+        if (!DEFAULT_SANDBOX_FACTORY) {
+            throw new Error("There is no default script sandbox factory");
         }
 
-        return DEFAULT_BRIDGE_FACTORY();
+        return DEFAULT_SANDBOX_FACTORY();
     }
 
-    /** Registers the default script host sandbox bridge */
-    public static setupDefaultBridge(factory: ScriptHostBridgeFactory): void {
-        DEFAULT_BRIDGE_FACTORY = factory;
+    /** Registers the default script sandbox */
+    public static setupDefaultSandbox(factory: ScriptSandboxFactory): void {
+        DEFAULT_SANDBOX_FACTORY = factory;
     }
 
     constructor(options: ScriptHostOptions = {}) {
         const { 
-            createBridge = ScriptHost.createDefaultBridge, 
+            createSandbox = ScriptHost.createDefaultSandbox, 
             expose = {},
             pingInterval = 5000,
             unresponsiveInterval = pingInterval * 2,
             defaultTimeout = 30000,
             initTimeout = defaultTimeout,
         } = options;
-        this.#factory = createBridge;
+        this.#factory = createSandbox;
         this.#funcs = Object.freeze({ ...expose });
         this.#pingInterval = pingInterval;
         this.#unresponsiveInterval = unresponsiveInterval;
@@ -77,7 +77,7 @@ export class ScriptHost {
 
     /** Disposes the script host */
     public dispose(): void {
-        this.#disposeBridge();
+        this.#disposeSandbox();
         this.#factory = null;
     }
 
@@ -190,7 +190,7 @@ export class ScriptHost {
     /** Resets the current script host */
     public reset(): void {
         this.#assertNotDisposed();
-        this.#disposeBridge();
+        this.#disposeSandbox();
     }
 
     async #request<T extends GenericResponse>(
@@ -200,17 +200,17 @@ export class ScriptHost {
     ): Promise<T> {
         timeout -= await this.#ensureInitialized();
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        this.#bridge!.post(request);
+        this.#sandbox!.post(request);
         return await this.#waitForResponse(request, predicate, timeout);
     }
 
     async #ensureInitialized(): Promise<number> {
         this.#assertNotDisposed();
 
-        if (this.#bridge === null) {
+        if (this.#sandbox === null) {
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            this.#bridge = this.#factory!();
-            this.#bridge.listen(() => this.#handleMessage);
+            this.#sandbox = this.#factory!();
+            this.#sandbox.listen(() => this.#handleMessage);
             if (this.#pingInterval > 0) {
                 this.#pingIntervalId = setInterval(() => this.#postPingIfNeeded, this.#pingInterval);
             }
@@ -222,7 +222,7 @@ export class ScriptHost {
                 messageId: this.#nextMessageId(),
                 funcs: new Set(Object.keys(this.#funcs)),
             };
-            this.#bridge.post(initRequest);           
+            this.#sandbox.post(initRequest);           
             this.#init = this.#waitForResponse(initRequest, isInitializeResponse, this.#initTimeout);
         }
 
@@ -232,12 +232,12 @@ export class ScriptHost {
     }
 
     #postPingIfNeeded(): void {
-        if (this.#bridge !== null && this.#shouldPostPing()) {
+        if (this.#sandbox !== null && this.#shouldPostPing()) {
             const pingMessage: PingRequest = {
                 type: "ping",
                 messageId: this.#nextMessageId(),
             };
-            this.#bridge.post(pingMessage);
+            this.#sandbox.post(pingMessage);
         }
     }
 
@@ -250,10 +250,10 @@ export class ScriptHost {
         }
     }
 
-    #disposeBridge(): void {
-        if (this.#bridge !== null) {
-            this.#bridge.dispose();
-            this.#bridge = null;
+    #disposeSandbox(): void {
+        if (this.#sandbox !== null) {
+            this.#sandbox.dispose();
+            this.#sandbox = null;
         }
 
         if (this.#pingIntervalId !== null) {
@@ -268,7 +268,7 @@ export class ScriptHost {
     }
 
     #handleMessage(message: ScriptValue): void {
-        if (this.#bridge === null) {
+        if (this.#sandbox === null) {
             return;
         }
 
@@ -280,7 +280,7 @@ export class ScriptHost {
                 messageId: this.#nextMessageId(),
                 inResponseTo: message.messageId,
             };
-            this.#bridge.post(pingResponse);
+            this.#sandbox.post(pingResponse);
         } else if (isFunctionCallRequest(message)) {
             this.#handleFunctionCall(message);
         } else if (isGenericResponse(message)) {
@@ -331,12 +331,12 @@ export class ScriptHost {
                 inResponseTo: message.messageId,
                 message: `Unsupported request: ${message.type}`,
             };
-            this.#bridge.post(errorResponse);
+            this.#sandbox.post(errorResponse);
         } 
     }
 
     async #handleFunctionCall(request: FunctionCallRequest): Promise<void> {
-        if (this.#bridge === null) {
+        if (this.#sandbox === null) {
             return;
         }
 
@@ -348,7 +348,7 @@ export class ScriptHost {
                 inResponseTo: request.messageId,
                 message: `Cannot call undefined function: ${request.key}`,
             };
-            this.#bridge.post(errorResponse);
+            this.#sandbox.post(errorResponse);
             return;
         }
 
@@ -363,7 +363,7 @@ export class ScriptHost {
                 inResponseTo: request.messageId,
                 result,
             };
-            this.#bridge.post(response);
+            this.#sandbox.post(response);
         } catch (err) {
             const response: ErrorResponse = {
                 type: "error",
@@ -371,7 +371,7 @@ export class ScriptHost {
                 inResponseTo: request.messageId,
                 message: String(err),
             };
-            this.#bridge.post(response);
+            this.#sandbox.post(response);
         }
     }
 
@@ -413,4 +413,4 @@ export class ScriptHost {
     }
 }
 
-let DEFAULT_BRIDGE_FACTORY: ScriptHostBridgeFactory | null = null;
+let DEFAULT_SANDBOX_FACTORY: ScriptSandboxFactory | null = null;

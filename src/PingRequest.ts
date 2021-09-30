@@ -1,7 +1,7 @@
 import { GenericMessage, isGenericMessage } from "./GenericMessage";
 
 /**
- * The message that is sent to ping the other end of a bridge
+ * The message that is sent to ping the other end of a messsage pipe
  * @public
  */
 export type PingRequest = GenericMessage<"ping">;

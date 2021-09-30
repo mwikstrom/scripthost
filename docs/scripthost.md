@@ -36,17 +36,17 @@ Sandboxed and observable Javascript host
 |  [EvaluateScriptRequest](./scripthost.evaluatescriptrequest.md) | The message that is sent to request script evaluation |
 |  [EvaluateScriptResponse](./scripthost.evaluatescriptresponse.md) | The response that is sent back after successful script evaluation |
 |  [FunctionCallRequest](./scripthost.functioncallrequest.md) | The message that is sent from the underlying sandbox to invoke a function exposed by the script host. |
-|  [FunctionCallResponse](./scripthost.functioncallresponse.md) | The response that is sent back to the bridge after a successful function call |
+|  [FunctionCallResponse](./scripthost.functioncallresponse.md) | The response that is sent back to the sandbox after a successful function call |
 |  [GenericMessage](./scripthost.genericmessage.md) | Generic message |
 |  [GenericResponse](./scripthost.genericresponse.md) | Generic response |
 |  [InitializeRequest](./scripthost.initializerequest.md) | The message that is sent to initialize the underlying sandbox |
 |  [InitializeResponse](./scripthost.initializeresponse.md) | The message that is sent when the underlying sandbox is ready |
 |  [ScriptEvalOptions](./scripthost.scriptevaloptions.md) | Options to the [ScriptHost.eval()](./scripthost.scripthost.eval.md) method |
 |  [ScriptFunctionScope](./scripthost.scriptfunctionscope.md) | The scope in which a script function is called |
-|  [ScriptHostBridge](./scripthost.scripthostbridge.md) | Bridge to an underlying script sandbox |
 |  [ScriptHostOptions](./scripthost.scripthostoptions.md) | Options that can be given to the [ScriptHost](./scripthost.scripthost.md) constructor |
 |  [ScriptObject](./scripthost.scriptobject.md) | A script object |
 |  [ScriptObserveOptions](./scripthost.scriptobserveoptions.md) | Options to the [ScriptHost.observe()](./scripthost.scripthost.observe.md) method |
+|  [ScriptSandbox](./scripthost.scriptsandbox.md) | A sandbox in which scripts are run |
 |  [TrackedVariable](./scripthost.trackedvariable.md) | A tracked variable |
 
 ## Type Aliases
@@ -54,9 +54,9 @@ Sandboxed and observable Javascript host
 |  Type Alias | Description |
 |  --- | --- |
 |  [ExposedFunctions](./scripthost.exposedfunctions.md) | Functions exposed to scripts |
-|  [PingRequest](./scripthost.pingrequest.md) | The message that is sent to ping the other end of a bridge |
+|  [PingRequest](./scripthost.pingrequest.md) | The message that is sent to ping the other end of a messsage pipe |
 |  [PingResponse](./scripthost.pingresponse.md) | The message that is sent to in response to a ping |
 |  [ScriptFunction](./scripthost.scriptfunction.md) | A function that can be called from a script |
-|  [ScriptHostBridgeFactory](./scripthost.scripthostbridgefactory.md) | Alias for a function that construct [ScriptHostBridge](./scripthost.scripthostbridge.md) instances |
+|  [ScriptSandboxFactory](./scripthost.scriptsandboxfactory.md) | Alias for a function that construct [ScriptSandbox](./scripthost.scriptsandbox.md) instances |
 |  [ScriptValue](./scripthost.scriptvalue.md) | A script value |
 

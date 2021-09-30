@@ -28,11 +28,11 @@ export declare class ScriptHost
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [createDefaultBridge()](./scripthost.scripthost.createdefaultbridge.md) | <code>static</code> | Constructs the default script host sandbox bridge |
+|  [createDefaultSandbox()](./scripthost.scripthost.createdefaultsandbox.md) | <code>static</code> | Constructs the default script sandbox |
 |  [dispose()](./scripthost.scripthost.dispose.md) |  | Disposes the script host |
 |  [eval(script, options)](./scripthost.scripthost.eval.md) |  | Evaluates the specified script |
 |  [init()](./scripthost.scripthost.init.md) |  | Explicitly initializes the script host. |
 |  [observe(script, options)](./scripthost.scripthost.observe.md) |  | Observes the specified script |
 |  [reset()](./scripthost.scripthost.reset.md) |  | Resets the current script host |
-|  [setupDefaultBridge(factory)](./scripthost.scripthost.setupdefaultbridge.md) | <code>static</code> | Registers the default script host sandbox bridge |
+|  [setupDefaultSandbox(factory)](./scripthost.scripthost.setupdefaultsandbox.md) | <code>static</code> | Registers the default script sandbox |
 

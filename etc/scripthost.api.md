@@ -117,29 +117,19 @@ export interface ScriptFunctionScope {
 // @public
 export class ScriptHost {
     constructor(options?: ScriptHostOptions);
-    static createDefaultBridge(): ScriptHostBridge;
+    static createDefaultSandbox(): ScriptSandbox;
     dispose(): void;
     eval(script: string, options?: ScriptEvalOptions): Promise<ScriptValue>;
     init(): Promise<void>;
     get isUnresponsive(): boolean;
     observe(script: string, options: ScriptObserveOptions): (this: void) => void;
     reset(): void;
-    static setupDefaultBridge(factory: ScriptHostBridgeFactory): void;
+    static setupDefaultSandbox(factory: ScriptSandboxFactory): void;
 }
-
-// @public
-export interface ScriptHostBridge {
-    dispose(): void;
-    listen(handler: (this: void, message: ScriptValue) => void): (this: void) => void;
-    post(message: ScriptValue): void;
-}
-
-// @public
-export type ScriptHostBridgeFactory = (this: void) => ScriptHostBridge;
 
 // @public
 export interface ScriptHostOptions {
-    createBridge?: ScriptHostBridgeFactory;
+    createSandbox?: ScriptSandboxFactory;
     defaultTimeout?: number;
     expose?: ExposedFunctions;
     initTimeout?: number;
@@ -158,6 +148,16 @@ export interface ScriptObserveOptions extends Omit<ScriptEvalOptions, "idempoten
     // (undocumented)
     onNext: (this: void, value: ScriptValue) => void;
 }
+
+// @public
+export interface ScriptSandbox {
+    dispose(): void;
+    listen(handler: (this: void, message: ScriptValue) => void): (this: void) => void;
+    post(message: ScriptValue): void;
+}
+
+// @public
+export type ScriptSandboxFactory = (this: void) => ScriptSandbox;
 
 // @public
 export type ScriptValue = (boolean | null | undefined | number | BigInt | string | Date | RegExp | Blob | File | FileList | ArrayBuffer | ArrayBufferView | ImageBitmap | ImageData | Array<ScriptValue> | Map<ScriptValue, ScriptValue> | Set<ScriptValue> | ScriptObject);

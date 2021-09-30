@@ -4,7 +4,7 @@
 
 ## FunctionCallResponse interface
 
-The response that is sent back to the bridge after a successful function call
+The response that is sent back to the sandbox after a successful function call
 
 <b>Signature:</b>
 

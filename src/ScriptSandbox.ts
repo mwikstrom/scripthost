@@ -1,21 +1,21 @@
 import { ScriptValue } from "./ScriptValue";
 
 /**
- * Bridge to an underlying script sandbox
+ * A sandbox in which scripts are run
  * @public
  */
-export interface ScriptHostBridge {
+export interface ScriptSandbox {
     /** Disposes the underlying sandbox */
     dispose(): void;
 
     /**
-     * Sends a message to the underlying sandbox
+     * Sends a message to the sandbox
      * @param message - The message to be sent
      */
     post(message: ScriptValue): void;
 
     /**
-     * Listens to messages from the underlying sandbox
+     * Listens to messages from the sandbox
      * @param handler - The callback to be invoked whenever a message is received
      * @returns A callback that shall be called to stop receiving messages
      */
@@ -23,7 +23,7 @@ export interface ScriptHostBridge {
 }
 
 /**
- * Alias for a function that construct {@link ScriptHostBridge} instances
+ * Alias for a function that construct {@link ScriptSandbox} instances
  * @public
  */
-export type ScriptHostBridgeFactory = (this: void) => ScriptHostBridge;
+export type ScriptSandboxFactory = (this: void) => ScriptSandbox;

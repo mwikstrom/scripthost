@@ -4,7 +4,7 @@
 
 ## PingRequest type
 
-The message that is sent to ping the other end of a bridge
+The message that is sent to ping the other end of a messsage pipe
 
 <b>Signature:</b>
 
