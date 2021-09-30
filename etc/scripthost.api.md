@@ -131,6 +131,7 @@ export interface ScriptHostOptions {
     defaultTimeout?: number;
     expose?: ExposedFunctions;
     initTimeout?: number;
+    messageIdPrefix?: string;
     pingInterval?: number;
     unresponsiveInterval?: number;
 }
