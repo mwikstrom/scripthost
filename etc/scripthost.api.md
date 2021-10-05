@@ -33,10 +33,13 @@ export class ScriptHost {
     dispose(): void;
     eval(script: string, options?: ScriptEvalOptions): Promise<ScriptValue>;
     init(): Promise<void>;
+    get isIdle(): boolean;
     get isUnresponsive(): boolean;
     observe(script: string, options: ScriptObserveOptions): (this: void) => void;
+    onIdleChange(callback: (idle: boolean) => void): () => void;
     reset(): void;
     static setupDefaultSandbox(factory: ScriptSandboxFactory): void;
+    whenIdle(): Promise<void>;
 }
 
 // @public

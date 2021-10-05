@@ -22,6 +22,7 @@ export declare class ScriptHost
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
+|  [isIdle](./scripthost.scripthost.isidle.md) |  | boolean | Determines whether the script host is idle |
 |  [isUnresponsive](./scripthost.scripthost.isunresponsive.md) |  | boolean | Determines whether the script host is unresponsive |
 
 ## Methods
@@ -33,6 +34,8 @@ export declare class ScriptHost
 |  [eval(script, options)](./scripthost.scripthost.eval.md) |  | Evaluates the specified script |
 |  [init()](./scripthost.scripthost.init.md) |  | Explicitly initializes the script host. |
 |  [observe(script, options)](./scripthost.scripthost.observe.md) |  | Observes the specified script |
+|  [onIdleChange(callback)](./scripthost.scripthost.onidlechange.md) |  | Registers a listener callback that shall be invoked whenever the idle status changes |
 |  [reset()](./scripthost.scripthost.reset.md) |  | Resets the current script host |
 |  [setupDefaultSandbox(factory)](./scripthost.scripthost.setupdefaultsandbox.md) | <code>static</code> | Registers the default script sandbox |
+|  [whenIdle()](./scripthost.scripthost.whenidle.md) |  | Returns a promise that is resolved when the script host is idle |
 
