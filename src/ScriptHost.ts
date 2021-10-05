@@ -42,7 +42,7 @@ export class ScriptHost {
     #messageIdCounter = 0;
     #pingIntervalId: ReturnType<typeof setInterval> | null = null;
     #lastPing: number | null = null;
-    readonly #writeObservers = new Set<(written: ReadonlyMap<string, number>) => boolean>();
+    readonly #writeObservers = new Map<string, (written: ReadonlyMap<string, number>) => boolean>();
     readonly #responseHandlers = new Map<string, (response: GenericResponse) => void>();
     readonly #messageIdPrefix: string;
     readonly #onIdleChangeHandlers = new Map<(idle: boolean) => void, number>();
@@ -117,7 +117,7 @@ export class ScriptHost {
             script,
             idempotent,
             instanceId,
-            track: onInvalidated !== null,
+            track: onInvalidated !== null || (!idempotent && this.#writeObservers.size > 0),
         };
 
         const { result, vars } = await this.#request(request, isEvaluateScriptResponse, timeout);
@@ -130,7 +130,7 @@ export class ScriptHost {
                 }
             }
             if (dependencies.size > 0) {
-                this.#writeObservers.add(mutations => {
+                this.#writeObservers.set(request.messageId, mutations => {
                     let invalidated = false;
                     
                     for (const [key, timestamp] of dependencies) {
@@ -190,6 +190,7 @@ export class ScriptHost {
             value => {
                 if (active) {
                     onNext(value);
+                    evalNext();
                 }
             },
             error => {
@@ -359,8 +360,8 @@ export class ScriptHost {
                     }
 
                     Object.freeze(written);
-                    const done = new Set<(written: ReadonlyMap<string, number>) => boolean>();
-                    for (const observer of this.#writeObservers) {
+                    const done = new Set<string>();
+                    for (const [key, observer] of this.#writeObservers) {
                         let keep = false;
                         try {
                             keep = !observer(written);
@@ -368,12 +369,12 @@ export class ScriptHost {
                             console.error("Exception in variable observer:", err);
                         }
                         if (!keep) {
-                            done.add(observer);
+                            done.add(key);
                         }
                     }
 
-                    for (const observer of done) {
-                        this.#writeObservers.delete(observer);
+                    for (const key of done) {
+                        this.#writeObservers.delete(key);
                     }
                 }
             }
