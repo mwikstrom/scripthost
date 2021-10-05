@@ -37,7 +37,8 @@ export class ScriptHost {
     readonly #defaultTimeout: number;
     readonly #initTimeout: number;
     #sandbox: ScriptSandbox | null = null;
-    #init: Promise<InitializeResponse> | null = null;
+    #initPromise: Promise<InitializeResponse> | null = null;
+    #isInitialized = false;
     #messageIdCounter = 0;
     #pingIntervalId: ReturnType<typeof setInterval> | null = null;
     #lastPing: number | null = null;
@@ -79,10 +80,21 @@ export class ScriptHost {
         return this.#responseHandlers.size === 0;
     }
 
+    /** Determines whether the script host is initialized */
+    public get isInitialized(): boolean {
+        return this.#isInitialized;
+    }
+
+    /** Determines whether the script host is disposed */
+    public get isDisposed(): boolean {
+        return this.#factory === null;
+    }
+
     /** Disposes the script host */
     public dispose(): void {
         this.#disposeSandbox();
         this.#factory = null;
+        this.#isInitialized = false;
     }
 
     /**
@@ -236,37 +248,37 @@ export class ScriptHost {
         predicate: (response: GenericResponse) => response is T,
         timeout: number,
     ): Promise<T> {
-        timeout -= await this.#ensureInitialized();
+        const promise = this.#waitForResponse(request, predicate, timeout);
+        await this.#ensureInitialized();
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         this.#sandbox!.post(request);
-        return await this.#waitForResponse(request, predicate, timeout);
+        return await promise;
     }
 
-    async #ensureInitialized(): Promise<number> {
+    async #ensureInitialized(): Promise<void> {
         this.#assertNotDisposed();
 
         if (this.#sandbox === null) {
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             this.#sandbox = this.#factory!();
-            this.#sandbox.listen(() => this.#handleMessage);
+            this.#sandbox.listen(message => this.#handleMessage(message));
             if (this.#pingInterval > 0) {
-                this.#pingIntervalId = setInterval(() => this.#postPingIfNeeded, this.#pingInterval);
+                this.#pingIntervalId = setInterval(() => this.#postPingIfNeeded(), this.#pingInterval);
             }
         }
 
-        if (this.#init === null) {
+        if (this.#initPromise === null) {
             const initRequest: InitializeRequest = {
                 type: "init",
                 messageId: this.#nextMessageId(),
                 funcs: new Set(Object.keys(this.#funcs)),
             };
+            this.#initPromise = this.#waitForResponse(initRequest, isInitializeResponse, this.#initTimeout);
             this.#sandbox.post(initRequest);           
-            this.#init = this.#waitForResponse(initRequest, isInitializeResponse, this.#initTimeout);
         }
 
-        const initWaitStart = Date.now();
-        await this.#init;
-        return Math.max(0, Date.now() - initWaitStart);
+        await this.#initPromise;
+        this.#isInitialized = true;
     }
 
     #postPingIfNeeded(): void {
@@ -305,7 +317,7 @@ export class ScriptHost {
         }
 
         this.#writeObservers.clear();
-        this.#init = null;
+        this.#initPromise = null;
         this.#lastPing = null;
     }
 
@@ -367,7 +379,7 @@ export class ScriptHost {
             }
 
             if (handler) {
-                this.#responseHandlers.delete(message.messageId);
+                this.#responseHandlers.delete(message.inResponseTo);
                 if (this.#responseHandlers.size === 0) {
                     this.#notifyIdle(true);
                 }
