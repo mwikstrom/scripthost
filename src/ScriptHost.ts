@@ -344,14 +344,10 @@ export class ScriptHost {
             const handler = this.#responseHandlers.get(message.inResponseTo);
 
             if (handler) {
-                this.#responseHandlers.delete(message.messageId);
                 try {
                     handler(message);
                 } catch (err) {
                     console.error("Exception in response handler:", err);
-                }
-                if (this.#responseHandlers.size === 0) {
-                    this.#notifyIdle(true);
                 }
             }
 
@@ -382,6 +378,13 @@ export class ScriptHost {
                     for (const observer of done) {
                         this.#writeObservers.delete(observer);
                     }
+                }
+            }
+
+            if (handler) {
+                this.#responseHandlers.delete(message.messageId);
+                if (this.#responseHandlers.size === 0) {
+                    this.#notifyIdle(true);
                 }
             }
         } else if (isGenericMessage(message)) {
