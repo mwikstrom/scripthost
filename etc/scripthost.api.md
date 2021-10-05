@@ -31,7 +31,9 @@ export class ScriptHost {
     dispose(): void;
     eval(script: string, options?: ScriptEvalOptions): Promise<ScriptValue>;
     init(): Promise<void>;
+    get isDisposed(): boolean;
     get isIdle(): boolean;
+    get isInitialized(): boolean;
     get isUnresponsive(): boolean;
     observe(script: string, options: ScriptObserveOptions): (this: void) => void;
     onIdleChange(callback: (idle: boolean) => void): () => void;
