@@ -44,6 +44,7 @@ export class ScriptHost {
     readonly #writeObservers = new Set<(written: ReadonlyMap<string, number>) => boolean>();
     readonly #responseHandlers = new Map<string, (response: GenericResponse) => void>();
     readonly #messageIdPrefix: string;
+    readonly #onIdleChangeHandlers = new Map<(idle: boolean) => void, number>();
 
     /** Constructs the default script sandbox */
     public static createDefaultSandbox(): ScriptSandbox {
@@ -86,6 +87,11 @@ export class ScriptHost {
             const age = Date.now() - this.#lastPing;
             return age > this.#unresponsiveInterval;
         }
+    }
+
+    /** Determines whether the script host is idle */
+    public get isIdle(): boolean {
+        return this.#responseHandlers.size === 0;
     }
 
     /** Disposes the script host */
@@ -200,10 +206,44 @@ export class ScriptHost {
         return () => { active = false; };
     }
 
+    /**
+     * Registers a listener callback that shall be invoked whenever the idle status changes
+     * @param callback - The callback that shall be invoked whenever the idle status changes
+     * @returns A callback that shall be invoked to stop listening
+     */
+    public onIdleChange(callback: (idle: boolean) => void): () => void {
+        let active = true;
+        this.#onIdleChangeHandlers.set(callback, (this.#onIdleChangeHandlers.get(callback) ?? 0) + 1);
+        return () => {
+            if (active) {
+                let count: number;
+                this.#onIdleChangeHandlers.set(callback, count = (this.#onIdleChangeHandlers.get(callback) ?? 0) - 1);
+                if (count <= 0) {
+                    this.#onIdleChangeHandlers.delete(callback);
+                }
+                active = false;
+            }
+        };
+    }
+
     /** Resets the current script host */
     public reset(): void {
         this.#assertNotDisposed();
         this.#disposeSandbox();
+    }
+
+    /** Returns a promise that is resolved when the script host is idle */
+    public whenIdle(): Promise<void> {
+        return new Promise<void>(resolve => {
+            if (this.isIdle) {
+                resolve();
+            } else {
+                const stop = this.onIdleChange(() => {
+                    resolve();
+                    stop();
+                });
+            }
+        });
     }
 
     async #request<T extends GenericResponse>(
@@ -273,8 +313,12 @@ export class ScriptHost {
             clearInterval(this.#pingIntervalId);
             this.#pingIntervalId = null;
         }
-    
-        this.#responseHandlers.clear();
+
+        if (this.#responseHandlers.size > 0) {    
+            this.#responseHandlers.clear();
+            this.#notifyIdle(true);
+        }
+
         this.#writeObservers.clear();
         this.#init = null;
         this.#lastPing = null;
@@ -305,6 +349,9 @@ export class ScriptHost {
                     handler(message);
                 } catch (err) {
                     console.error("Exception in response handler:", err);
+                }
+                if (this.#responseHandlers.size === 0) {
+                    this.#notifyIdle(true);
                 }
             }
 
@@ -412,7 +459,21 @@ export class ScriptHost {
                     reject(new Error(`Received unexpected response '${response.type}' to request '${request.type}'`));
                 }
             });
+
+            if (this.#responseHandlers.size === 1) {
+                this.#notifyIdle(false);
+            }
         });
+    }
+
+    #notifyIdle(value: boolean): void {
+        for (const callback of this.#onIdleChangeHandlers.keys()) {
+            try {
+                callback(value);
+            } catch (err) {
+                console.error("Exception in idle change handler:", err);
+            }
+        }
     }
 
     #nextMessageId(): string {
