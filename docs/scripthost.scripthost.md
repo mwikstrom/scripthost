@@ -16,7 +16,7 @@ export declare class ScriptHost
 
 |  Constructor | Modifiers | Description |
 |  --- | --- | --- |
-|  [(constructor)(options)](./scripthost.scripthost._constructor_.md) |  | Constructs a new instance of the <code>ScriptHost</code> class |
+|  [(constructor)(factory, options)](./scripthost.scripthost._constructor_.md) |  | Constructs a new instance of the <code>ScriptHost</code> class |
 
 ## Properties
 
@@ -29,13 +29,11 @@ export declare class ScriptHost
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [createDefaultSandbox()](./scripthost.scripthost.createdefaultsandbox.md) | <code>static</code> | Constructs the default script sandbox |
 |  [dispose()](./scripthost.scripthost.dispose.md) |  | Disposes the script host |
 |  [eval(script, options)](./scripthost.scripthost.eval.md) |  | Evaluates the specified script |
 |  [init()](./scripthost.scripthost.init.md) |  | Explicitly initializes the script host. |
 |  [observe(script, options)](./scripthost.scripthost.observe.md) |  | Observes the specified script |
 |  [onIdleChange(callback)](./scripthost.scripthost.onidlechange.md) |  | Registers a listener callback that shall be invoked whenever the idle status changes |
 |  [reset()](./scripthost.scripthost.reset.md) |  | Resets the current script host |
-|  [setupDefaultSandbox(factory)](./scripthost.scripthost.setupdefaultsandbox.md) | <code>static</code> | Registers the default script sandbox |
 |  [whenIdle()](./scripthost.scripthost.whenidle.md) |  | Returns a promise that is resolved when the script host is idle |
 

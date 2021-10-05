@@ -1,13 +1,10 @@
-import { ScriptSandboxFactory, ScriptValue } from "scripthost-core";
+import { ScriptValue } from "scripthost-core";
 
 /**
  * Options that can be given to the {@link ScriptHost} constructor
  * @public
  */
 export interface ScriptHostOptions {
-    /** Optionally specifices the sandbox factory */
-    createSandbox?: ScriptSandboxFactory;
-
     /** Optionally specifies functions that shall be exposed to scripts */
     expose?: ExposedFunctions;
 

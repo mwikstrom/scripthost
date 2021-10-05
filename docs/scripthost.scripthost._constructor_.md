@@ -9,12 +9,13 @@ Constructs a new instance of the `ScriptHost` class
 <b>Signature:</b>
 
 ```typescript
-constructor(options?: ScriptHostOptions);
+constructor(factory: ScriptSandboxFactory, options?: ScriptHostOptions);
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
+|  factory | ScriptSandboxFactory |  |
 |  options | [ScriptHostOptions](./scripthost.scripthostoptions.md) |  |
 

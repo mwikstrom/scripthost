@@ -46,23 +46,8 @@ export class ScriptHost {
     readonly #messageIdPrefix: string;
     readonly #onIdleChangeHandlers = new Map<(idle: boolean) => void, number>();
 
-    /** Constructs the default script sandbox */
-    public static createDefaultSandbox(): ScriptSandbox {
-        if (!DEFAULT_SANDBOX_FACTORY) {
-            throw new Error("There is no default script sandbox factory");
-        }
-
-        return DEFAULT_SANDBOX_FACTORY();
-    }
-
-    /** Registers the default script sandbox */
-    public static setupDefaultSandbox(factory: ScriptSandboxFactory): void {
-        DEFAULT_SANDBOX_FACTORY = factory;
-    }
-
-    constructor(options: ScriptHostOptions = {}) {
+    constructor(factory: ScriptSandboxFactory, options: ScriptHostOptions = {}) {
         const { 
-            createSandbox = ScriptHost.createDefaultSandbox, 
             expose = {},
             pingInterval = 5000,
             unresponsiveInterval = pingInterval * 2,
@@ -70,7 +55,7 @@ export class ScriptHost {
             initTimeout = defaultTimeout,
             messageIdPrefix = `host-${nanoid()}-`,
         } = options;
-        this.#factory = createSandbox;
+        this.#factory = factory;
         this.#funcs = Object.freeze({ ...expose });
         this.#pingInterval = pingInterval;
         this.#unresponsiveInterval = unresponsiveInterval;
@@ -489,5 +474,3 @@ export class ScriptHost {
         }
     }
 }
-
-let DEFAULT_SANDBOX_FACTORY: ScriptSandboxFactory | null = null;

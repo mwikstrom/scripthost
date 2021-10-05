@@ -5,7 +5,6 @@
 ```ts
 
 import { EvaluateScriptRequest } from 'scripthost-core';
-import { ScriptSandbox } from 'scripthost-core';
 import { ScriptSandboxFactory } from 'scripthost-core';
 import { ScriptValue } from 'scripthost-core';
 
@@ -28,8 +27,7 @@ export interface ScriptFunctionScope {
 
 // @public
 export class ScriptHost {
-    constructor(options?: ScriptHostOptions);
-    static createDefaultSandbox(): ScriptSandbox;
+    constructor(factory: ScriptSandboxFactory, options?: ScriptHostOptions);
     dispose(): void;
     eval(script: string, options?: ScriptEvalOptions): Promise<ScriptValue>;
     init(): Promise<void>;
@@ -38,13 +36,11 @@ export class ScriptHost {
     observe(script: string, options: ScriptObserveOptions): (this: void) => void;
     onIdleChange(callback: (idle: boolean) => void): () => void;
     reset(): void;
-    static setupDefaultSandbox(factory: ScriptSandboxFactory): void;
     whenIdle(): Promise<void>;
 }
 
 // @public
 export interface ScriptHostOptions {
-    createSandbox?: ScriptSandboxFactory;
     defaultTimeout?: number;
     expose?: ExposedFunctions;
     initTimeout?: number;
