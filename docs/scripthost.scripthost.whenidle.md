@@ -9,8 +9,15 @@ Returns a promise that is resolved when the script host is idle
 <b>Signature:</b>
 
 ```typescript
-whenIdle(): Promise<void>;
+whenIdle(debounce?: number): Promise<void>;
 ```
+
+## Parameters
+
+|  Parameter | Type | Description |
+|  --- | --- | --- |
+|  debounce | number |  |
+
 <b>Returns:</b>
 
 Promise&lt;void&gt;

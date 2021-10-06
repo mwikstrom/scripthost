@@ -37,5 +37,5 @@ export declare class ScriptHost
 |  [observe(script, options)](./scripthost.scripthost.observe.md) |  | Observes the specified script |
 |  [onIdleChange(callback)](./scripthost.scripthost.onidlechange.md) |  | Registers a listener callback that shall be invoked whenever the idle status changes |
 |  [reset()](./scripthost.scripthost.reset.md) |  | Resets the current script host |
-|  [whenIdle()](./scripthost.scripthost.whenidle.md) |  | Returns a promise that is resolved when the script host is idle |
+|  [whenIdle(debounce)](./scripthost.scripthost.whenidle.md) |  | Returns a promise that is resolved when the script host is idle |
 

@@ -38,7 +38,7 @@ export class ScriptHost {
     observe(script: string, options: ScriptObserveOptions): (this: void) => void;
     onIdleChange(callback: (idle: boolean) => void): () => void;
     reset(): void;
-    whenIdle(): Promise<void>;
+    whenIdle(debounce?: number): Promise<void>;
 }
 
 // @public
