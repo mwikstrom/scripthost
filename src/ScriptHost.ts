@@ -190,7 +190,6 @@ export class ScriptHost {
             value => {
                 if (active) {
                     onNext(value);
-                    evalNext();
                 }
             },
             error => {
@@ -231,16 +230,23 @@ export class ScriptHost {
     }
 
     /** Returns a promise that is resolved when the script host is idle */
-    public whenIdle(): Promise<void> {
-        return new Promise<void>(resolve => {
-            if (this.isIdle) {
-                resolve();
-            } else {
-                const stop = this.onIdleChange(() => {
-                    resolve();
-                    stop();
-                });
-            }
+    public async whenIdle(debounce = 0): Promise<void> {
+        await new Promise<void>(resolve => {
+            let timerId: ReturnType<typeof setTimeout> | null = null;
+            const check = (idle: boolean) => {
+                if (timerId !== null) {
+                    clearTimeout(timerId);
+                }
+
+                if (idle) {
+                    timerId = setTimeout(() => {
+                        resolve();
+                        stop();
+                    }, debounce);
+                }
+            };
+            const stop = this.onIdleChange(check);
+            check(this.isIdle);
         });
     }
 
