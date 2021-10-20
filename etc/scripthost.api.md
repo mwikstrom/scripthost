@@ -12,7 +12,7 @@ import { ScriptValue } from 'scripthost-core';
 export type ExposedFunctions = Partial<Readonly<Record<string, ScriptFunction>>>;
 
 // @public
-export interface ScriptEvalOptions extends Pick<EvaluateScriptRequest, "idempotent" | "instanceId"> {
+export interface ScriptEvalOptions extends Pick<EvaluateScriptRequest, "idempotent" | "instanceId" | "vars"> {
     onInvalidated?: (this: void) => void;
     timeout?: number;
 }

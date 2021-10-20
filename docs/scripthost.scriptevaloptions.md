@@ -9,9 +9,9 @@ Options to the [ScriptHost.eval()](./scripthost.scripthost.eval.md) method
 <b>Signature:</b>
 
 ```typescript
-export interface ScriptEvalOptions extends Pick<EvaluateScriptRequest, "idempotent" | "instanceId"> 
+export interface ScriptEvalOptions extends Pick<EvaluateScriptRequest, "idempotent" | "instanceId" | "vars"> 
 ```
-<b>Extends:</b> Pick&lt;EvaluateScriptRequest, "idempotent" \| "instanceId"&gt;
+<b>Extends:</b> Pick&lt;EvaluateScriptRequest, "idempotent" \| "instanceId" \| "vars"&gt;
 
 ## Properties
 
