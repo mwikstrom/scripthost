@@ -4,7 +4,7 @@ import { EvaluateScriptRequest } from "scripthost-core";
  * Options to the {@link ScriptHost.eval} method
  * @public
  */
-export interface ScriptEvalOptions extends Pick<EvaluateScriptRequest, "idempotent" | "instanceId"> {
+export interface ScriptEvalOptions extends Pick<EvaluateScriptRequest, "idempotent" | "instanceId" | "vars"> {
     /**
      * The maximum time, in millseconds, to wait for a result
      * @remarks
