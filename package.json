@@ -58,6 +58,6 @@
   },
   "dependencies": {
     "nanoid": "^3.1.28",
-    "scripthost-core": "^0.2.3"
+    "scripthost-core": "^0.2.5"
   }
 }
