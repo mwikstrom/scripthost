@@ -120,7 +120,7 @@ export class ScriptHost {
             track: onInvalidated !== null || (!idempotent && this.#writeObservers.size > 0),
         };
 
-        const { result, vars } = await this.#request(request, isEvaluateScriptResponse, timeout);
+        const { result, vars, refresh } = await this.#request(request, isEvaluateScriptResponse, timeout);
 
         if (vars && onInvalidated) {
             const dependencies = new Map<string, number>();
@@ -151,6 +151,14 @@ export class ScriptHost {
 
                     return invalidated;
                 });
+            }
+        }
+
+        if (refresh !== void(0) && refresh !== false) {
+            if (typeof refresh !== "number") {
+                console.warn("Ignoring invalid refresh variable from script evaluation:", refresh);
+            } else if (refresh > 0 && onInvalidated) {
+                setTimeout(onInvalidated, refresh);
             }
         }
 
