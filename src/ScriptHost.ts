@@ -121,34 +121,52 @@ export class ScriptHost {
         };
 
         const { result, vars, refresh } = await this.#request(request, isEvaluateScriptResponse, timeout);
+        let refreshTimer: ReturnType<typeof setTimeout> | undefined;
+        let invalidated = false;
+        let observer: ((mutations: ReadonlyMap<string, number>) => boolean) | undefined;
 
-        if (vars && onInvalidated) {
+        const invalidate = onInvalidated ? () => {
+            if (!invalidated) {
+                invalidated = true;
+
+                try {
+                    onInvalidated();
+                } catch (err) {
+                    console.error("Script invalidation handler threw exception:", err);
+                }
+            }
+
+            if (refreshTimer !== void(0)) {
+                clearTimeout(refreshTimer);
+                refreshTimer = void(0);
+            }
+
+            if (observer !== void(0)) {
+                if (this.#writeObservers.get(request.messageId) === observer) {
+                    this.#writeObservers.delete(request.messageId);
+                }
+                observer = void(0);
+            }
+        } : null;
+
+        if (vars && invalidate) {
             const dependencies = new Map<string, number>();
+            
             for (const [key, { read, write }] of vars) {
                 if (typeof read === "number" && (typeof write !== "number" || read > write)) {
                     dependencies.set(key, read);
                 }
             }
+
             if (dependencies.size > 0) {
-                this.#writeObservers.set(request.messageId, mutations => {
-                    let invalidated = false;
-                    
+                this.#writeObservers.set(request.messageId, observer =  mutations => {
                     for (const [key, timestamp] of dependencies) {
                         const written = mutations.get(key);
                         if (typeof written === "number" && written > timestamp) {
-                            invalidated = true;
+                            invalidate();
                             break;
                         }
                     }
-
-                    if (invalidated) {
-                        try {
-                            onInvalidated();
-                        } catch (err) {
-                            console.error("Script invalidation handler threw exception:", err);
-                        }
-                    }
-
                     return invalidated;
                 });
             }
@@ -157,8 +175,8 @@ export class ScriptHost {
         if (refresh !== void(0) && refresh !== false) {
             if (typeof refresh !== "number") {
                 console.warn("Ignoring invalid refresh variable from script evaluation:", refresh);
-            } else if (refresh > 0 && onInvalidated) {
-                setTimeout(onInvalidated, refresh);
+            } else if (refresh > 0 && invalidate) {
+                refreshTimer = setTimeout(invalidate, refresh);
             }
         }
 
