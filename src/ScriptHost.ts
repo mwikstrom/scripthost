@@ -108,6 +108,7 @@ export class ScriptHost {
             timeout = this.#defaultTimeout, 
             idempotent,
             instanceId,
+            vars: input,
             onInvalidated = null,
         } = options;
 
@@ -117,6 +118,7 @@ export class ScriptHost {
             script,
             idempotent,
             instanceId,
+            vars: input,
             track: onInvalidated !== null || (!idempotent && this.#writeObservers.size > 0),
         };
 
