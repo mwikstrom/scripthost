@@ -64,8 +64,8 @@ export type ScriptFunction = (this: ScriptFunctionScope, ...args: ScriptValue[])
  */
 export interface ScriptFunctionScope {
     /**
-     * Specifies whether the function is called in an idemponent scope, in which case it
+     * Specifies whether the function is called in an idempotent scope, in which case it
      * is not allowed to have any side-effects.
      */
-    readonly idemponent: boolean;
+    readonly idempotent: boolean;
 }

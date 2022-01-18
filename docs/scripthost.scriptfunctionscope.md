@@ -16,5 +16,5 @@ export interface ScriptFunctionScope
 
 |  Property | Type | Description |
 |  --- | --- | --- |
-|  [idemponent](./scripthost.scriptfunctionscope.idemponent.md) | boolean | Specifies whether the function is called in an idemponent scope, in which case it is not allowed to have any side-effects. |
+|  [idempotent](./scripthost.scriptfunctionscope.idempotent.md) | boolean | Specifies whether the function is called in an idempotent scope, in which case it is not allowed to have any side-effects. |
 

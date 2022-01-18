@@ -449,7 +449,7 @@ export class ScriptHost {
 
         try {
             const scope: ScriptFunctionScope = {
-                idemponent: request.idempotent,
+                idempotent: request.idempotent,
             };
             const result = await func.bind(scope)(...request.args);
             const response: FunctionCallResponse = {

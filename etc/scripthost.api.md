@@ -22,7 +22,7 @@ export type ScriptFunction = (this: ScriptFunctionScope, ...args: ScriptValue[])
 
 // @public
 export interface ScriptFunctionScope {
-    readonly idemponent: boolean;
+    readonly idempotent: boolean;
 }
 
 // @public
