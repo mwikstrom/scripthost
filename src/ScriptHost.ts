@@ -4,6 +4,7 @@ import { ExposedFunctions, ScriptFunctionScope, ScriptHostOptions } from "./Scri
 import { 
     ErrorResponse, 
     EvaluateScriptRequest, 
+    EvaluateScriptResponse, 
     FunctionCallRequest, 
     FunctionCallResponse, 
     GenericMessage, 
@@ -46,6 +47,7 @@ export class ScriptHost {
     readonly #responseHandlers = new Map<string, (response: GenericResponse) => void>();
     readonly #messageIdPrefix: string;
     readonly #onIdleChangeHandlers = new Map<(idle: boolean) => void, number>();
+    readonly #evaluationContexts = new Map<string, unknown>();
 
     constructor(factory: ScriptSandboxFactory, options: ScriptHostOptions = {}) {
         const { 
@@ -122,7 +124,14 @@ export class ScriptHost {
             track: onInvalidated !== null || (!idempotent && this.#writeObservers.size > 0),
         };
 
-        const { result, vars, refresh } = await this.#request(request, isEvaluateScriptResponse, timeout);
+        let response: EvaluateScriptResponse;
+        this.#evaluationContexts.set(request.messageId, options.context);
+        try {
+            response = await this.#request(request, isEvaluateScriptResponse, timeout);
+        } finally {
+            this.#evaluationContexts.delete(request.messageId);
+        }
+        const { result, vars, refresh } = response;
         let refreshTimer: ReturnType<typeof setTimeout> | undefined;
         let invalidated = false;
         let observer: ((mutations: ReadonlyMap<string, number>) => boolean) | undefined;
@@ -450,6 +459,7 @@ export class ScriptHost {
         try {
             const scope: ScriptFunctionScope = {
                 idempotent: request.idempotent,
+                context: this.#evaluationContexts.get(request.correlationId),
             };
             const result = await func.bind(scope)(...request.args);
             const response: FunctionCallResponse = {

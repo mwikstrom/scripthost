@@ -68,4 +68,9 @@ export interface ScriptFunctionScope {
      * is not allowed to have any side-effects.
      */
     readonly idempotent: boolean;
+
+    /**
+     * The context, if any, that was given as a script evaluation option.
+     */
+    readonly context: unknown;
 }

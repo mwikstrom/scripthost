@@ -19,4 +19,10 @@ export interface ScriptEvalOptions extends Pick<EvaluateScriptRequest, "idempote
      * Optionally specifies a callback that shall be invoked when the evaluated value is invalidated.
      */
     onInvalidated?: (this: void) => void;
+
+    /**
+     * Optionally specifies a context for the script evaluation. This context is exposed to script
+     * functions that are called during evaluation.
+     */
+    context?: unknown;
 }

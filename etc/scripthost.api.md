@@ -13,6 +13,7 @@ export type ExposedFunctions = Partial<Readonly<Record<string, ScriptFunction>>>
 
 // @public
 export interface ScriptEvalOptions extends Pick<EvaluateScriptRequest, "idempotent" | "instanceId" | "vars"> {
+    context?: unknown;
     onInvalidated?: (this: void) => void;
     timeout?: number;
 }
@@ -22,6 +23,7 @@ export type ScriptFunction = (this: ScriptFunctionScope, ...args: ScriptValue[])
 
 // @public
 export interface ScriptFunctionScope {
+    readonly context: unknown;
     readonly idempotent: boolean;
 }
 
