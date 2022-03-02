@@ -48,6 +48,7 @@ export class ScriptHost {
     readonly #messageIdPrefix: string;
     readonly #onIdleChangeHandlers = new Map<(idle: boolean) => void, number>();
     readonly #evaluationContexts = new Map<string, unknown>();
+    #stopListening: (() => void) | null = null;
 
     constructor(factory: ScriptSandboxFactory, options: ScriptHostOptions = {}) {
         const { 
@@ -305,7 +306,7 @@ export class ScriptHost {
         if (this.#sandbox === null) {
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             this.#sandbox = this.#factory!();
-            this.#sandbox.listen(message => this.#handleMessage(message));
+            this.#stopListening = this.#sandbox.listen(message => this.#handleMessage(message));
             if (this.#pingInterval > 0) {
                 this.#pingIntervalId = setInterval(() => this.#postPingIfNeeded(), this.#pingInterval);
             }
@@ -345,6 +346,11 @@ export class ScriptHost {
     }
 
     #disposeSandbox(): void {
+        if (this.#stopListening !== null) {
+            this.#stopListening();
+            this.#stopListening = null;
+        }
+
         if (this.#sandbox !== null) {
             this.#sandbox.dispose();
             this.#sandbox = null;
