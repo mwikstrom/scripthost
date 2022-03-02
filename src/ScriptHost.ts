@@ -294,13 +294,12 @@ export class ScriptHost {
         timeout: number,
     ): Promise<T> {
         const promise = this.#waitForResponse(request, predicate, timeout);
-        await this.#ensureInitialized();
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        this.#sandbox!.post(request);
+        const sandbox = await this.#ensureInitialized();
+        sandbox.post(request);
         return await promise;
     }
 
-    async #ensureInitialized(): Promise<void> {
+    async #ensureInitialized(): Promise<ScriptSandbox> {
         this.#assertNotDisposed();
 
         if (this.#sandbox === null) {
@@ -324,6 +323,7 @@ export class ScriptHost {
 
         await this.#initPromise;
         this.#isInitialized = true;
+        return this.#sandbox;
     }
 
     #postPingIfNeeded(): void {
@@ -372,7 +372,9 @@ export class ScriptHost {
     }
 
     #handleMessage(message: ScriptValue): void {
-        if (this.#sandbox === null) {
+        const sandbox = this.#sandbox;
+
+        if (sandbox === null) {
             return;
         }
 
@@ -384,7 +386,7 @@ export class ScriptHost {
                 messageId: this.#nextMessageId(),
                 inResponseTo: message.messageId,
             };
-            this.#sandbox.post(pingResponse);
+            sandbox.post(pingResponse);
         } else if (isFunctionCallRequest(message)) {
             this.#handleFunctionCall(message);
         } else if (isGenericResponse(message)) {
@@ -441,12 +443,14 @@ export class ScriptHost {
                 inResponseTo: message.messageId,
                 message: `Unsupported request: ${message.type}`,
             };
-            this.#sandbox.post(errorResponse);
+            sandbox.post(errorResponse);
         } 
     }
 
     async #handleFunctionCall(request: FunctionCallRequest): Promise<void> {
-        if (this.#sandbox === null) {
+        const sandbox = this.#sandbox;
+
+        if (sandbox === null) {
             return;
         }
 
@@ -458,7 +462,7 @@ export class ScriptHost {
                 inResponseTo: request.messageId,
                 message: `Cannot call undefined function: ${request.key}`,
             };
-            this.#sandbox.post(errorResponse);
+            sandbox.post(errorResponse);
             return;
         }
 
@@ -474,7 +478,7 @@ export class ScriptHost {
                 inResponseTo: request.messageId,
                 result,
             };
-            this.#sandbox.post(response);
+            sandbox.post(response);
         } catch (err) {
             const response: ErrorResponse = {
                 type: "error",
@@ -482,7 +486,7 @@ export class ScriptHost {
                 inResponseTo: request.messageId,
                 message: String(err),
             };
-            this.#sandbox.post(response);
+            sandbox.post(response);
         }
     }
 
