@@ -22,6 +22,7 @@ export declare class ScriptHost
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
+|  [funcs](./scripthost.scripthost.funcs.md) |  | [ExposedFunctions](./scripthost.exposedfunctions.md) | Gets the exposed functions |
 |  [isDisposed](./scripthost.scripthost.isdisposed.md) |  | boolean | Determines whether the script host is disposed |
 |  [isIdle](./scripthost.scripthost.isidle.md) |  | boolean | Determines whether the script host is idle |
 |  [isInitialized](./scripthost.scripthost.isinitialized.md) |  | boolean | Determines whether the script host is initialized |

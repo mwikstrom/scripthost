@@ -68,6 +68,11 @@ export class ScriptHost {
         this.#messageIdPrefix = messageIdPrefix;
     }
 
+    /** Gets the exposed functions */
+    public get funcs(): ExposedFunctions {
+        return this.#funcs;
+    }
+
     /** Determines whether the script host is unresponsive */
     public get isUnresponsive(): boolean {
         if (this.#pingIntervalId === null || this.#lastPing === null || this.#unresponsiveInterval <= 0) {

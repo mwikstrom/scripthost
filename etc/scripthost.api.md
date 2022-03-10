@@ -32,6 +32,7 @@ export class ScriptHost {
     constructor(factory: ScriptSandboxFactory, options?: ScriptHostOptions);
     dispose(): void;
     eval(script: string, options?: ScriptEvalOptions): Promise<ScriptValue>;
+    get funcs(): ExposedFunctions;
     init(): Promise<void>;
     get isDisposed(): boolean;
     get isIdle(): boolean;
