@@ -1,6 +1,6 @@
 {
   "name": "scripthost",
-  "version": "0.3.14",
+  "version": "0.3.15",
   "description": "Sandboxed and observable Javascript host",
   "main": "./dist/scripthost.js",
   "typings": "./dist/scripthost.d.ts",
