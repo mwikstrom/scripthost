@@ -73,4 +73,9 @@ export interface ScriptFunctionScope {
      * The context, if any, that was given as a script evaluation option.
      */
     readonly context: unknown;
+
+    /**
+     * Invalidates the script evaluation that invoked the function
+     */
+    invalidate(): void;
 }

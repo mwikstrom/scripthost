@@ -50,7 +50,7 @@ export class ScriptHost {
     readonly #responseHandlers = new Map<string, (response: GenericResponse) => void>();
     readonly #messageIdPrefix: string;
     readonly #onIdleChangeHandlers = new Map<(idle: boolean) => void, number>();
-    readonly #evaluationContexts = new Map<string, unknown>();
+    readonly #activeScopes = new Map<string, Omit<ScriptFunctionScope, "idempotent">>();
     #stopListening: (() => void) | null = null;
 
     constructor(factory: ScriptSandboxFactory, options: ScriptHostOptions = {}) {
@@ -133,14 +133,6 @@ export class ScriptHost {
             track: onInvalidated !== null || (!idempotent && this.#writeObservers.size > 0),
         };
 
-        let response: EvaluateScriptResponse;
-        this.#evaluationContexts.set(request.messageId, options.context);
-        try {
-            response = await this.#request(request, isEvaluateScriptResponse, timeout);
-        } finally {
-            this.#evaluationContexts.delete(request.messageId);
-        }
-        const { result, vars, refresh } = response;
         let refreshTimer: ReturnType<typeof setTimeout> | undefined;
         let invalidated = false;
         let observer: ((mutations: ReadonlyMap<string, number>) => boolean) | undefined;
@@ -168,6 +160,25 @@ export class ScriptHost {
                 observer = void(0);
             }
         } : null;
+
+        let response: EvaluateScriptResponse;
+        let active = true;
+        this.#activeScopes.set(request.messageId, {
+            context: options.context,
+            invalidate: () => {
+                // don't invalidate while active
+                if (!active && invalidate) {
+                    invalidate();
+                }
+            },
+        });
+        try {
+            response = await this.#request(request, isEvaluateScriptResponse, timeout);
+        } finally {
+            active = false;
+            this.#activeScopes.delete(request.messageId);
+        }
+        const { result, vars, refresh } = response;
 
         if (vars && invalidate) {
             const dependencies = new Map<string, number>();
@@ -483,10 +494,22 @@ export class ScriptHost {
             return;
         }
 
+        const active = this.#activeScopes.get(request.correlationId);
+        if (!active) {
+            const errorResponse: ErrorResponse = {
+                type: "error",
+                messageId: this.#nextMessageId(),
+                inResponseTo: request.messageId,
+                message: "Cannot call function from an inactive script",
+            };
+            sandbox.post(errorResponse);
+            return;
+        }
+
         try {
             const scope: ScriptFunctionScope = {
+                ...active,
                 idempotent: request.idempotent,
-                context: this.#evaluationContexts.get(request.correlationId),
             };
             const result = await func.bind(scope)(...request.args);
             const response: FunctionCallResponse = {
