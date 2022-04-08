@@ -25,6 +25,7 @@ export type ScriptFunction = (this: ScriptFunctionScope, ...args: ScriptValue[])
 export interface ScriptFunctionScope {
     readonly context: unknown;
     readonly idempotent: boolean;
+    invalidate(): void;
 }
 
 // @public

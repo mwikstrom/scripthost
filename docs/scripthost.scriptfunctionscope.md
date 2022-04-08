@@ -19,3 +19,9 @@ export interface ScriptFunctionScope
 |  [context](./scripthost.scriptfunctionscope.context.md) | unknown | The context, if any, that was given as a script evaluation option. |
 |  [idempotent](./scripthost.scriptfunctionscope.idempotent.md) | boolean | Specifies whether the function is called in an idempotent scope, in which case it is not allowed to have any side-effects. |
 
+## Methods
+
+|  Method | Description |
+|  --- | --- |
+|  [invalidate()](./scripthost.scriptfunctionscope.invalidate.md) | Invalidates the script evaluation that invoked the function |
+
