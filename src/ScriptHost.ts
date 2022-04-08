@@ -18,11 +18,14 @@ import {
     isGenericResponse, 
     isInitializeResponse, 
     isPingRequest, 
+    isYieldRequest, 
     PingRequest, 
     PingResponse, 
     ScriptSandbox, 
     ScriptSandboxFactory, 
-    ScriptValue 
+    ScriptValue, 
+    YieldRequest,
+    YieldResponse
 } from "scripthost-core";
 import { nanoid } from "nanoid";
 
@@ -394,6 +397,8 @@ export class ScriptHost {
             sandbox.post(pingResponse);
         } else if (isFunctionCallRequest(message)) {
             this.#handleFunctionCall(message);
+        } else if (isYieldRequest(message)) {
+            this.#handleYield(message);
         } else if (isGenericResponse(message)) {
             const handler = this.#responseHandlers.get(message.inResponseTo);
 
@@ -414,24 +419,7 @@ export class ScriptHost {
                             written.set(key, tracked.write);
                         }
                     }
-
-                    Object.freeze(written);
-                    const done = new Set<string>();
-                    for (const [key, observer] of this.#writeObservers) {
-                        let keep = false;
-                        try {
-                            keep = !observer(written);
-                        } catch (err) {
-                            console.error("Exception in variable observer:", err);
-                        }
-                        if (!keep) {
-                            done.add(key);
-                        }
-                    }
-
-                    for (const key of done) {
-                        this.#writeObservers.delete(key);
-                    }
+                    this.#handleWrittenVariables(Object.freeze(written));
                 }
             }
 
@@ -452,11 +440,35 @@ export class ScriptHost {
         } 
     }
 
+    #handleWrittenVariables(written: ReadonlyMap<string, number>): void {
+        const done = new Set<string>();
+        for (const [key, observer] of this.#writeObservers) {
+            let keep = false;
+            try {
+                keep = !observer(written);
+            } catch (err) {
+                console.error("Exception in variable observer:", err);
+            }
+            if (!keep) {
+                done.add(key);
+            }
+        }
+
+        for (const key of done) {
+            this.#writeObservers.delete(key);
+        }
+    }
+
     async #handleFunctionCall(request: FunctionCallRequest): Promise<void> {
         const sandbox = this.#sandbox;
 
         if (sandbox === null) {
             return;
+        }
+
+        const { written } = request;
+        if (written) {
+            this.#handleWrittenVariables(Object.freeze(written));
         }
 
         const func = this.#funcs[request.key];
@@ -493,6 +505,27 @@ export class ScriptHost {
             };
             sandbox.post(response);
         }
+    }
+
+    #handleYield(request: YieldRequest): void {
+        const sandbox = this.#sandbox;
+
+        if (sandbox === null) {
+            return;
+        }
+
+        const { written } = request;
+        if (written) {
+            this.#handleWrittenVariables(Object.freeze(written));
+        }
+
+        const response: YieldResponse = {
+            type: "continue",
+            messageId: this.#nextMessageId(),
+            inResponseTo: request.messageId,
+        };
+
+        sandbox.post(response);
     }
 
     #waitForResponse<T extends GenericResponse>(

@@ -17,5 +17,5 @@ constructor(factory: ScriptSandboxFactory, options?: ScriptHostOptions);
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  factory | ScriptSandboxFactory |  |
-|  options | [ScriptHostOptions](./scripthost.scripthostoptions.md) |  |
+|  options | [ScriptHostOptions](./scripthost.scripthostoptions.md) | <i>(Optional)</i> |
 

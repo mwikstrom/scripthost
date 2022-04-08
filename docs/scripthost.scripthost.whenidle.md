@@ -16,7 +16,7 @@ whenIdle(debounce?: number): Promise<void>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  debounce | number |  |
+|  debounce | number | <i>(Optional)</i> |
 
 <b>Returns:</b>
 

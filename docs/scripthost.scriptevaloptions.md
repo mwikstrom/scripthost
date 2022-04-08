@@ -11,7 +11,7 @@ Options to the [ScriptHost.eval()](./scripthost.scripthost.eval.md) method
 ```typescript
 export interface ScriptEvalOptions extends Pick<EvaluateScriptRequest, "idempotent" | "instanceId" | "vars"> 
 ```
-<b>Extends:</b> Pick&lt;EvaluateScriptRequest, "idempotent" \| "instanceId" \| "vars"&gt;
+<b>Extends:</b> Pick&lt;EvaluateScriptRequest
 
 ## Properties
 

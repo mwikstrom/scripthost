@@ -17,7 +17,7 @@ eval(script: string, options?: ScriptEvalOptions): Promise<ScriptValue>;
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  script | string | The script to evaluate |
-|  options | [ScriptEvalOptions](./scripthost.scriptevaloptions.md) | Optional options that control script evaluation |
+|  options | [ScriptEvalOptions](./scripthost.scriptevaloptions.md) | <i>(Optional)</i> Optional options that control script evaluation |
 
 <b>Returns:</b>
 
