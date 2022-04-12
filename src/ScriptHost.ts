@@ -58,7 +58,7 @@ export class ScriptHost {
             expose = {},
             pingInterval = 5000,
             unresponsiveInterval = pingInterval * 2,
-            defaultTimeout = 30000,
+            defaultTimeout = 300000, // 5 minutes
             initTimeout = defaultTimeout,
             messageIdPrefix = `host-${nanoid()}-`,
         } = options;
