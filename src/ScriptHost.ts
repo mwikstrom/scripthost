@@ -161,7 +161,7 @@ export class ScriptHost {
             }
         } : null;
 
-        let response: EvaluateScriptResponse;
+        let response: EvaluateScriptResponse | ErrorResponse;
         let active = true;
         this.#activeScopes.set(request.messageId, {
             context: options.context,
@@ -173,12 +173,13 @@ export class ScriptHost {
             },
         });
         try {
-            response = await this.#request(request, isEvaluateScriptResponse, timeout);
+            response = await this.#request(request, isEvaluateScriptOrErrorResponse, timeout);
         } finally {
             active = false;
             this.#activeScopes.delete(request.messageId);
         }
-        const { result, vars, refresh } = response;
+
+        const { vars, refresh } = response;
 
         if (vars && invalidate) {
             const dependencies = new Map<string, number>();
@@ -211,7 +212,11 @@ export class ScriptHost {
             }
         }
 
-        return result;
+        if (isErrorResponse(response)) {
+            throw new Error(response.message);
+        } else {
+            return response.result;
+        }
     }
 
     /**
@@ -421,7 +426,7 @@ export class ScriptHost {
                 }
             }
 
-            if (isEvaluateScriptResponse(message) && this.#writeObservers.size > 0) {
+            if (isEvaluateScriptOrErrorResponse(message) && this.#writeObservers.size > 0) {
                 const { vars } = message;
                 if (vars) {
                     const written = new Map<string, number>();
@@ -601,4 +606,8 @@ export class ScriptHost {
             throw new Error("Script host is disposed");
         }
     }
+}
+
+function isEvaluateScriptOrErrorResponse(message: unknown): message is EvaluateScriptResponse | ErrorResponse {
+    return isEvaluateScriptResponse(message) || isErrorResponse(message);
 }
