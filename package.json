@@ -37,11 +37,11 @@
   "devDependencies": {
     "@babel/core": "^7.17.9",
     "@babel/preset-env": "^7.16.11",
-    "@microsoft/api-documenter": "^7.17.4",
-    "@microsoft/api-extractor": "^7.21.1",
+    "@microsoft/api-documenter": "^7.17.6",
+    "@microsoft/api-extractor": "^7.21.3",
     "@rollup/plugin-babel": "^5.3.1",
     "@rollup/plugin-commonjs": "^20.0.0",
-    "@rollup/plugin-node-resolve": "^13.1.3",
+    "@rollup/plugin-node-resolve": "^13.2.0",
     "@rollup/plugin-typescript": "^8.3.1",
     "@types/jest": "^27.4.1",
     "@typescript-eslint/eslint-plugin": "^4.33.0",
@@ -58,6 +58,6 @@
   },
   "dependencies": {
     "nanoid": "^3.3.2",
-    "scripthost-core": "^1.0.0-preview.1"
+    "scripthost-core": "^1.0.0-preview.2"
   }
 }
