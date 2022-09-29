@@ -191,7 +191,7 @@ export class ScriptHost {
             }
 
             if (dependencies.size > 0) {
-                this.#writeObservers.set(request.messageId, observer =  mutations => {
+                this.#writeObservers.set(request.messageId, observer = mutations => {
                     for (const [key, timestamp] of dependencies) {
                         const written = mutations.get(key);
                         if (typeof written === "number" && written > timestamp) {
