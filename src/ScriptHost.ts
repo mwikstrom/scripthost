@@ -130,7 +130,10 @@ export class ScriptHost {
             idempotent,
             instanceId,
             vars: input,
-            track: onInvalidated !== null || (!idempotent && this.#writeObservers.size > 0),
+            // Note: We must track variables for all non-idempotent scripts even when we currently does
+            // not have a registered write observer because a concurrent eval may end up registering
+            // a write observer that is dependent on the current eval.
+            track: onInvalidated !== null || !idempotent,
         };
 
         let refreshTimer: ReturnType<typeof setTimeout> | undefined;
