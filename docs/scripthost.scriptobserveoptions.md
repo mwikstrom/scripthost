@@ -11,12 +11,12 @@ Options to the [ScriptHost.observe()](./scripthost.scripthost.observe.md) method
 ```typescript
 export interface ScriptObserveOptions extends Omit<ScriptEvalOptions, "idempotent" | "onInvalidated"> 
 ```
-<b>Extends:</b> Omit&lt;[ScriptEvalOptions](./scripthost.scriptevaloptions.md)
+<b>Extends:</b> Omit&lt;[ScriptEvalOptions](./scripthost.scriptevaloptions.md)<!-- -->, "idempotent" \| "onInvalidated"&gt;
 
 ## Properties
 
-|  Property | Type | Description |
-|  --- | --- | --- |
-|  [onError?](./scripthost.scriptobserveoptions.onerror.md) | (this: void, error: unknown) =&gt; void | <i>(Optional)</i> |
-|  [onNext](./scripthost.scriptobserveoptions.onnext.md) | (this: void, value: ScriptValue) =&gt; void |  |
+|  Property | Modifiers | Type | Description |
+|  --- | --- | --- | --- |
+|  [onError?](./scripthost.scriptobserveoptions.onerror.md) |  | (this: void, error: unknown) =&gt; void | <i>(Optional)</i> |
+|  [onNext](./scripthost.scriptobserveoptions.onnext.md) |  | (this: void, value: ScriptValue) =&gt; void |  |
 
