@@ -35,12 +35,14 @@ export class ScriptHost {
     eval(script: string, options?: ScriptEvalOptions): Promise<ScriptValue>;
     get funcs(): ExposedFunctions;
     init(): Promise<void>;
+    invalidateAllObservations(): void;
     get isDisposed(): boolean;
     get isIdle(): boolean;
     get isInitialized(): boolean;
     get isUnresponsive(): boolean;
     observe(script: string, options: ScriptObserveOptions): (this: void) => void;
     onIdleChange(callback: (idle: boolean) => void): () => void;
+    replaceFuncs(funcs: ExposedFunctions): void;
     reset(): void;
     whenIdle(debounce?: number): Promise<void>;
 }

@@ -35,8 +35,10 @@ export declare class ScriptHost
 |  [dispose()](./scripthost.scripthost.dispose.md) |  | Disposes the script host |
 |  [eval(script, options)](./scripthost.scripthost.eval.md) |  | Evaluates the specified script |
 |  [init()](./scripthost.scripthost.init.md) |  | Explicitly initializes the script host. |
+|  [invalidateAllObservations()](./scripthost.scripthost.invalidateallobservations.md) |  | Causes all observed scripts to be re-evaluated |
 |  [observe(script, options)](./scripthost.scripthost.observe.md) |  | Observes the specified script |
 |  [onIdleChange(callback)](./scripthost.scripthost.onidlechange.md) |  | Registers a listener callback that shall be invoked whenever the idle status changes |
+|  [replaceFuncs(funcs)](./scripthost.scripthost.replacefuncs.md) |  | Replaces the specified exposed functions. |
 |  [reset()](./scripthost.scripthost.reset.md) |  | Resets the current script host |
 |  [whenIdle(debounce)](./scripthost.scripthost.whenidle.md) |  | Returns a promise that is resolved when the script host is idle |
 

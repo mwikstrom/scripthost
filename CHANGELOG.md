@@ -1,3 +1,8 @@
+## 1.1.0 - 2022-09-29
+
+- New feature: Allow explicit invalidation of all active observations: `ScriptHost.invalidateAllObservations()`
+- New feature: Allow replacement of exposed script functions: `ScriptHost.replaceFuncs(...)`
+
 ## 1.0.1 - 2022-09-29
 
 - Fix: Track vars in all non-idempotent evals

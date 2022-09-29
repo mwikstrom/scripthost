@@ -42,7 +42,7 @@ export interface ScriptHostOptions {
     /**
      * Optional, message identifier prefix
      */
-     messageIdPrefix?: string;
+    messageIdPrefix?: string;
 }
 
 /**

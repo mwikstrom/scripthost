@@ -52,6 +52,7 @@ export class ScriptHost {
     readonly #onIdleChangeHandlers = new Map<(idle: boolean) => void, number>();
     readonly #activeScopes = new Map<string, Omit<ScriptFunctionScope, "idempotent">>();
     #stopListening: (() => void) | null = null;
+    readonly #activeObservations = new Set<() => void>();
 
     constructor(factory: ScriptSandboxFactory, options: ScriptHostOptions = {}) {
         const { 
@@ -241,15 +242,19 @@ export class ScriptHost {
         const { onNext, onError, ...rest } = options;
         let active = true;
 
+        const onInvalidated = () => {
+            if (active) {
+                evalNext();
+            }
+        };
+
         const evalOptions: ScriptEvalOptions = {
             ...rest,
             idempotent: true,
-            onInvalidated: () => {
-                if (active) {
-                    evalNext();
-                }
-            },
-        };        
+            onInvalidated,
+        };
+
+        this.#activeObservations.add(onInvalidated);
 
         const evalNext = () => this.eval(script, evalOptions).then(
             value => {
@@ -265,7 +270,39 @@ export class ScriptHost {
         );        
 
         evalNext();
-        return () => { active = false; };
+        return () => {
+            if (active) {
+                this.#activeObservations.delete(onInvalidated);
+                active = false;
+            }
+        };
+    }
+
+    /**
+     * Replaces the specified exposed functions.
+     * @param funcs - The newly exposed functions
+     * @remarks
+     * Only functions that were exposed when the script host was initialized can be replaced.
+     * An attempt to expose another function will cause an error to be thrown.
+     */
+    public replaceFuncs(funcs: ExposedFunctions): void {
+        for (const key of Object.keys(funcs)) {
+            if (!(key in this.#funcs)) {
+                throw new Error(`Cannot replace function ${key} because it was not initially exposed`);
+            }
+        }
+        this.#funcs = Object.freeze({ ...this.#funcs, ...funcs });
+    }
+
+    /** Causes all observed scripts to be re-evaluated */
+    public invalidateAllObservations(): void {
+        for (const callback of this.#activeObservations) {
+            try {
+                callback();
+            } catch (err) {
+                console.error("Script invalidation handler threw exception:", err);
+            }
+        }
     }
 
     /**
