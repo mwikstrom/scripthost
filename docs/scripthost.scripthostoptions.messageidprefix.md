@@ -4,7 +4,7 @@
 
 ## ScriptHostOptions.messageIdPrefix property
 
-Optional, message identifier prefix
+Optional message identifier prefix
 
 <b>Signature:</b>
 

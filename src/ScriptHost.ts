@@ -50,9 +50,10 @@ export class ScriptHost {
     readonly #responseHandlers = new Map<string, (response: GenericResponse) => void>();
     readonly #messageIdPrefix: string;
     readonly #onIdleChangeHandlers = new Map<(idle: boolean) => void, number>();
-    readonly #activeScopes = new Map<string, Omit<ScriptFunctionScope, "idempotent">>();
+    readonly #activeScopes = new Map<string, Pick<ScriptFunctionScope, "context" | "invalidate">>();
     #stopListening: (() => void) | null = null;
     readonly #activeObservations = new Set<() => void>();
+    readonly #readOnlyGlobals: boolean | undefined;
 
     constructor(factory: ScriptSandboxFactory, options: ScriptHostOptions = {}) {
         const { 
@@ -62,6 +63,7 @@ export class ScriptHost {
             defaultTimeout = 300000, // 5 minutes
             initTimeout = defaultTimeout,
             messageIdPrefix = `host-${nanoid()}-`,
+            readOnlyGlobals,
         } = options;
         this.#factory = factory;
         this.#funcs = Object.freeze({ ...expose });
@@ -70,6 +72,7 @@ export class ScriptHost {
         this.#defaultTimeout = defaultTimeout;
         this.#initTimeout = initTimeout;
         this.#messageIdPrefix = messageIdPrefix;
+        this.#readOnlyGlobals = readOnlyGlobals;
     }
 
     /** Gets the exposed functions */
@@ -380,6 +383,7 @@ export class ScriptHost {
                 type: "init",
                 messageId: this.#nextMessageId(),
                 funcs: new Set(Object.keys(this.#funcs)),
+                readOnlyGlobals: this.#readOnlyGlobals,
             };
             this.#initPromise = this.#waitForResponse(initRequest, isInitializeResponse, this.#initTimeout);
             this.#sandbox.post(initRequest);           
@@ -522,18 +526,19 @@ export class ScriptHost {
             return;
         }
 
-        const { written } = request;
+        const { written, idempotent, key } = request;
+        
         if (written) {
             this.#handleWrittenVariables(Object.freeze(written));
         }
 
-        const func = this.#funcs[request.key];
+        const func = this.#funcs[key];
         if (!func) {
             const errorResponse: ErrorResponse = {
                 type: "error",
                 messageId: this.#nextMessageId(),
                 inResponseTo: request.messageId,
-                message: `Cannot call undefined function: ${request.key}`,
+                message: `Cannot call undefined function: ${key}`,
             };
             sandbox.post(errorResponse);
             return;
@@ -554,7 +559,8 @@ export class ScriptHost {
         try {
             const scope: ScriptFunctionScope = {
                 ...active,
-                idempotent: request.idempotent,
+                idempotent,
+                key,
             };
             const result = await func.bind(scope)(...request.args);
             const response: FunctionCallResponse = {

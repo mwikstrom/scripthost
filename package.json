@@ -50,7 +50,7 @@
     "jest": "^27.5.1",
     "rimraf": "^3.0.2",
     "rollup": "^2.79.1",
-    "scripthost-inline": "^1.1.0",
+    "scripthost-inline": "^1.2.0",
     "ts-jest": "^27.1.5",
     "ts-node": "^10.9.1",
     "tslib": "^2.4.0",
@@ -58,6 +58,6 @@
   },
   "dependencies": {
     "nanoid": "^3.3.4",
-    "scripthost-core": "1.x"
+    "scripthost-core": "^1.1.0"
   }
 }

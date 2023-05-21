@@ -1,3 +1,8 @@
+## 1.2.0 - 2023-05-22
+
+- New feature: Read-only globals
+- New feature: `key` in `ScriptFunctionScope`
+
 ## 1.1.0 - 2022-09-29
 
 - New feature: Allow explicit invalidation of all active observations: `ScriptHost.invalidateAllObservations()`

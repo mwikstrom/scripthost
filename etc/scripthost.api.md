@@ -26,6 +26,7 @@ export interface ScriptFunctionScope {
     readonly context: unknown;
     readonly idempotent: boolean;
     invalidate(): void;
+    readonly key: string;
 }
 
 // @public
@@ -54,6 +55,7 @@ export interface ScriptHostOptions {
     initTimeout?: number;
     messageIdPrefix?: string;
     pingInterval?: number;
+    readOnlyGlobals?: boolean;
     unresponsiveInterval?: number;
 }
 

@@ -40,9 +40,14 @@ export interface ScriptHostOptions {
     unresponsiveInterval?: number;
 
     /**
-     * Optional, message identifier prefix
+     * Optional message identifier prefix
      */
     messageIdPrefix?: string;
+
+    /**
+     * Specifies whether global variables shall be read-only
+     */
+    readOnlyGlobals?: boolean;
 }
 
 /**
@@ -73,6 +78,9 @@ export interface ScriptFunctionScope {
      * The context, if any, that was given as a script evaluation option.
      */
     readonly context: unknown;
+
+    /** Key of the function that is being invoked */
+    readonly key: string;
 
     /**
      * Invalidates the script evaluation that invoked the function
