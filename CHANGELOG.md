@@ -1,3 +1,7 @@
+## 1.2.1 - 2023-06-02
+
+- Fix: Unwrap error message in function call error response
+
 ## 1.2.0 - 2023-05-22
 
 - New feature: Read-only globals

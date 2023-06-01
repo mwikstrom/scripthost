@@ -575,7 +575,7 @@ export class ScriptHost {
                 type: "error",
                 messageId: this.#nextMessageId(),
                 inResponseTo: request.messageId,
-                message: String(err),
+                message: err instanceof Error ? err.message : String(err),
             };
             sandbox.post(response);
         }
