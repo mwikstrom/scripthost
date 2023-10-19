@@ -1,3 +1,7 @@
+## 1.3.0 -2023-10-19
+
+- New feature: `ScriptFunctionScope.onScriptExit`
+
 ## 1.2.1 - 2023-06-02
 
 - Fix: Unwrap error message in function call error response

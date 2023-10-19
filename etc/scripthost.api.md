@@ -27,6 +27,7 @@ export interface ScriptFunctionScope {
     readonly idempotent: boolean;
     invalidate(): void;
     readonly key: string;
+    onScriptExit?: (callback: () => void) => boolean;
 }
 
 // @public

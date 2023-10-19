@@ -19,6 +19,7 @@ export interface ScriptFunctionScope
 |  [context](./scripthost.scriptfunctionscope.context.md) | <code>readonly</code> | unknown | The context, if any, that was given as a script evaluation option. |
 |  [idempotent](./scripthost.scriptfunctionscope.idempotent.md) | <code>readonly</code> | boolean | Specifies whether the function is called in an idempotent scope, in which case it is not allowed to have any side-effects. |
 |  [key](./scripthost.scriptfunctionscope.key.md) | <code>readonly</code> | string | Key of the function that is being invoked |
+|  [onScriptExit?](./scripthost.scriptfunctionscope.onscriptexit.md) |  | (callback: () =&gt; void) =&gt; boolean | <i>(Optional)</i> Registers a callback function that shall be invoked when the current script evaluation completes |
 
 ## Methods
 

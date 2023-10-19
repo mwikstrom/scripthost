@@ -50,7 +50,7 @@ export class ScriptHost {
     readonly #responseHandlers = new Map<string, (response: GenericResponse) => void>();
     readonly #messageIdPrefix: string;
     readonly #onIdleChangeHandlers = new Map<(idle: boolean) => void, number>();
-    readonly #activeScopes = new Map<string, Pick<ScriptFunctionScope, "context" | "invalidate">>();
+    readonly #activeScopes = new Map<string, ActiveScope>();
     #stopListening: (() => void) | null = null;
     readonly #activeObservations = new Set<() => void>();
     readonly #readOnlyGlobals: boolean | undefined;
@@ -170,6 +170,8 @@ export class ScriptHost {
 
         let response: EvaluateScriptResponse | ErrorResponse;
         let active = true;
+        const scriptExitCallbacks = new Set<() => void>();
+
         this.#activeScopes.set(request.messageId, {
             context: options.context,
             invalidate: () => {
@@ -178,12 +180,25 @@ export class ScriptHost {
                     invalidate();
                 }
             },
+            onScriptExit: callback => {
+                if (active) {
+                    scriptExitCallbacks.add(callback);
+                }
+                return active;
+            },
         });
         try {
             response = await this.#request(request, isEvaluateScriptOrErrorResponse, timeout);
         } finally {
             active = false;
             this.#activeScopes.delete(request.messageId);
+            for (const callback of scriptExitCallbacks) {
+                try {
+                    callback();
+                } catch (ignored) {
+                    console.warn("Ignoring error from script exit callback:", ignored);
+                }
+            }
         }
 
         const { vars, refresh } = response;
@@ -657,3 +672,5 @@ export class ScriptHost {
 function isEvaluateScriptOrErrorResponse(message: unknown): message is EvaluateScriptResponse | ErrorResponse {
     return isEvaluateScriptResponse(message) || isErrorResponse(message);
 }
+
+type ActiveScope = Required<Pick<ScriptFunctionScope, "context" | "invalidate" | "onScriptExit">>;
