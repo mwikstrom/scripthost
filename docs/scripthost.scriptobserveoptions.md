@@ -9,9 +9,9 @@ Options to the [ScriptHost.observe()](./scripthost.scripthost.observe.md) method
 <b>Signature:</b>
 
 ```typescript
-export interface ScriptObserveOptions extends Omit<ScriptEvalOptions, "idempotent" | "onInvalidated"> 
+export interface ScriptObserveOptions extends Omit<ScriptEvalOptions, "idempotent" | "onInvalidated" | "onObserverExit"> 
 ```
-<b>Extends:</b> Omit&lt;[ScriptEvalOptions](./scripthost.scriptevaloptions.md)<!-- -->, "idempotent" \| "onInvalidated"&gt;
+<b>Extends:</b> Omit&lt;[ScriptEvalOptions](./scripthost.scriptevaloptions.md)<!-- -->, "idempotent" \| "onInvalidated" \| "onObserverExit"&gt;
 
 ## Properties
 

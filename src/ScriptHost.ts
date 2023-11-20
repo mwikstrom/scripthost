@@ -125,6 +125,7 @@ export class ScriptHost {
             instanceId,
             vars: input,
             onInvalidated = null,
+            onObserverExit,
         } = options;
 
         const request: EvaluateScriptRequest = {
@@ -186,6 +187,7 @@ export class ScriptHost {
                 }
                 return active;
             },
+            onObserverExit,
         });
         try {
             response = await this.#request(request, isEvaluateScriptOrErrorResponse, timeout);
@@ -259,6 +261,7 @@ export class ScriptHost {
     public observe(script: string, options: ScriptObserveOptions): (this: void) => void {
         const { onNext, onError, ...rest } = options;
         let active = true;
+        const observerExitCallbacks = new Set<() => void>();
 
         const onInvalidated = () => {
             if (active) {
@@ -266,10 +269,18 @@ export class ScriptHost {
             }
         };
 
+        const onObserverExit: ScriptEvalOptions["onObserverExit"] = callback => {
+            if (active) {
+                observerExitCallbacks.add(callback);
+            }
+            return active;
+        };
+
         const evalOptions: ScriptEvalOptions = {
             ...rest,
             idempotent: true,
             onInvalidated,
+            onObserverExit,
         };
 
         this.#activeObservations.add(onInvalidated);
@@ -292,6 +303,13 @@ export class ScriptHost {
             if (active) {
                 this.#activeObservations.delete(onInvalidated);
                 active = false;
+                for (const callback of observerExitCallbacks) {
+                    try {
+                        callback();
+                    } catch (ignored) {
+                        console.warn("Ignoring error from observer exit callback:", ignored);
+                    }
+                }
             }
         };
     }
@@ -673,4 +691,6 @@ function isEvaluateScriptOrErrorResponse(message: unknown): message is EvaluateS
     return isEvaluateScriptResponse(message) || isErrorResponse(message);
 }
 
-type ActiveScope = Required<Pick<ScriptFunctionScope, "context" | "invalidate" | "onScriptExit">>;
+type ActiveScope = 
+    Required<Pick<ScriptFunctionScope, "context" | "invalidate" | "onScriptExit">> & 
+    Pick<ScriptFunctionScope, "onObserverExit">;

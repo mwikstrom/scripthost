@@ -25,4 +25,17 @@ export interface ScriptEvalOptions extends Pick<EvaluateScriptRequest, "idempote
      * functions that are called during evaluation.
      */
     context?: unknown;
+
+    /**
+     * Optionally specifies a registration function that shall register callbacks to be invoked when the observer of the
+     * current script evaluation is no longer active.
+     * 
+     * @param callback - The callback to register
+     * 
+     * @returns true when the callback was registered, and otherwise false
+     * 
+     * @remarks
+     * This function is optional and shall be undefined when the script evaluation is not being observed.
+     */
+    onObserverExit?: (callback: () => void) => boolean;
 }

@@ -1,4 +1,8 @@
-## 1.3.0 -2023-10-19
+## 1.4.0 - 2023-11-20
+
+- New feature: `ScriptFunctionScope.onObserverExit` and `ScriptEvalOptions.onObserverExit`
+
+## 1.3.0 - 2023-10-19
 
 - New feature: `ScriptFunctionScope.onScriptExit`
 

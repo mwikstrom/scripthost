@@ -15,6 +15,7 @@ export type ExposedFunctions = Partial<Readonly<Record<string, ScriptFunction>>>
 export interface ScriptEvalOptions extends Pick<EvaluateScriptRequest, "idempotent" | "instanceId" | "vars"> {
     context?: unknown;
     onInvalidated?: (this: void) => void;
+    onObserverExit?: (callback: () => void) => boolean;
     timeout?: number;
 }
 
@@ -27,6 +28,7 @@ export interface ScriptFunctionScope {
     readonly idempotent: boolean;
     invalidate(): void;
     readonly key: string;
+    onObserverExit?: (callback: () => void) => boolean;
     onScriptExit?: (callback: () => void) => boolean;
 }
 
@@ -61,7 +63,7 @@ export interface ScriptHostOptions {
 }
 
 // @public
-export interface ScriptObserveOptions extends Omit<ScriptEvalOptions, "idempotent" | "onInvalidated"> {
+export interface ScriptObserveOptions extends Omit<ScriptEvalOptions, "idempotent" | "onInvalidated" | "onObserverExit"> {
     // (undocumented)
     onError?: (this: void, error: unknown) => void;
     // (undocumented)

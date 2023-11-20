@@ -19,5 +19,6 @@ export interface ScriptEvalOptions extends Pick<EvaluateScriptRequest, "idempote
 |  --- | --- | --- | --- |
 |  [context?](./scripthost.scriptevaloptions.context.md) |  | unknown | <i>(Optional)</i> Optionally specifies a context for the script evaluation. This context is exposed to script functions that are called during evaluation. |
 |  [onInvalidated?](./scripthost.scriptevaloptions.oninvalidated.md) |  | (this: void) =&gt; void | <i>(Optional)</i> Optionally specifies a callback that shall be invoked when the evaluated value is invalidated. |
+|  [onObserverExit?](./scripthost.scriptevaloptions.onobserverexit.md) |  | (callback: () =&gt; void) =&gt; boolean | <i>(Optional)</i> Optionally specifies a registration function that shall register callbacks to be invoked when the observer of the current script evaluation is no longer active. |
 |  [timeout?](./scripthost.scriptevaloptions.timeout.md) |  | number | <i>(Optional)</i> The maximum time, in millseconds, to wait for a result |
 

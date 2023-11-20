@@ -99,4 +99,17 @@ export interface ScriptFunctionScope {
      * is created by ScriptHost version 1.3+, and it will be marked as required in a future major version.
      */
     onScriptExit?: (callback: () => void) => boolean;
+
+    /**
+     * Registers a callback function that shall be invoked when the observer, if any, of the current script 
+     * evaluation is completed and therefore no longer observing the evaluation.
+     * 
+     * @param callback - The callback to register
+     * 
+     * @returns true when the callback was registered, and otherwise false
+     * 
+     * @remarks
+     * This function is optional and undefined unless the script function is invoked in an observed context.
+     */
+    onObserverExit?: (callback: () => void) => boolean;
 }
