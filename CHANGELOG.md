@@ -1,3 +1,7 @@
+## 1.4.1 - 2023-11-22
+
+- Fix: Invoke and clear *observer exit* callbacks before re-evaluating observed script
+
 ## 1.4.0 - 2023-11-20
 
 - New feature: `ScriptFunctionScope.onObserverExit` and `ScriptEvalOptions.onObserverExit`

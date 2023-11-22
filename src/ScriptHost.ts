@@ -276,6 +276,17 @@ export class ScriptHost {
             return active;
         };
 
+        const invokeAndClearExitCallbacks = () => {
+            for (const callback of observerExitCallbacks) {
+                try {
+                    callback();
+                } catch (ignored) {
+                    console.warn("Ignoring error from observer exit callback:", ignored);
+                }
+            }
+            observerExitCallbacks.clear();
+        };
+
         const evalOptions: ScriptEvalOptions = {
             ...rest,
             idempotent: true,
@@ -285,31 +296,28 @@ export class ScriptHost {
 
         this.#activeObservations.add(onInvalidated);
 
-        const evalNext = () => this.eval(script, evalOptions).then(
-            value => {
-                if (active) {
-                    onNext(value);
-                }
-            },
-            error => {
-                if (active && onError) {
-                    onError(error);
-                }
-            }
-        );        
+        const evalNext = () => {
+            invokeAndClearExitCallbacks();
+            this.eval(script, evalOptions).then(
+                value => {
+                    if (active) {
+                        onNext(value);
+                    }
+                },
+                error => {
+                    if (active && onError) {
+                        onError(error);
+                    }
+                }                
+            );        
+        };
 
         evalNext();
         return () => {
             if (active) {
                 this.#activeObservations.delete(onInvalidated);
                 active = false;
-                for (const callback of observerExitCallbacks) {
-                    try {
-                        callback();
-                    } catch (ignored) {
-                        console.warn("Ignoring error from observer exit callback:", ignored);
-                    }
-                }
+                invokeAndClearExitCallbacks();
             }
         };
     }
